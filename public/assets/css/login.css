@@ -2,7 +2,7 @@ body {
   /* font-family: "Open Sans", sans-serif; */
   height: 100vh;
   background: url("https://hotel.vesergenperu.com/storage/settings/August2025/Sr3SXcG3gMzqPEba3LlS.jpg") 50% fixed !important;
-  background-size: cover;
+  background-size: cover !important;
 }
 
 @keyframes spinner {
