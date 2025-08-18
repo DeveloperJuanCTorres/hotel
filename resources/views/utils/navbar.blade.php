@@ -343,7 +343,11 @@ class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bo
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">Account Setting</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Logout</a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button class="dropdown-item" type="submit">Cerrar sesión</button>
+            </form>
+            <!-- <a class="dropdown-item" href="#">Cerrar sesión</a> -->
             </li>
         </div>
         </ul>
