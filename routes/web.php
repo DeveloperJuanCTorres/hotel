@@ -26,6 +26,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/rooms/list', [HomeController::class, 'list'])->name('rooms.list');
 });
 
-Route::group(['prefix' => 'admin'], function () {
+// Route::group(['prefix' => 'admin'], function () {
+//     Voyager::routes();
+// });
+
+Route::group(['prefix' => 'admin', 'middleware' => ['voyager.sanitize']], function () {
     Voyager::routes();
 });
