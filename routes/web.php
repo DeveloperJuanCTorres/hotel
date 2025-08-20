@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/rooms', [HomeController::class, 'room'])->name('rooms');
     Route::get('/rooms/list', [HomeController::class, 'list'])->name('rooms.list');
+    Route::post('/rooms/updateStatus', [HomeController::class, 'updateStatus'])->name('rooms.updateStatus');
 });
 
 // Route::group(['prefix' => 'admin'], function () {
