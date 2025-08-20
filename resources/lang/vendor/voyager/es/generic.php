@@ -24,7 +24,7 @@ return [
     'compass'                => 'Brújula',
     'created_at'             => 'Creado el',
     'custom'                 => 'Personalizado',    
-    'dashboard'              => 'Tableroo',
+    'dashboard'              => 'Tablero',
     'database'               => 'Base de datos',
     'default'                => 'Por defecto',
     'delete'                 => 'Eliminar',
