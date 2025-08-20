@@ -1,6 +1,12 @@
 @foreach($rooms as $room)
 <div class="col-md-4 col-lg-3 col-12">
-    <a href="">
+    <a href="javascript:void(0);"
+        class="room-link" 
+        data-id="{{ $room->id }}" 
+        data-status="{{ $room->status }}" 
+        data-numero="{{ $room->numero }}"
+        data-type="{{ $room->type->name }}">
+
         @if($room->status == 'DISPONIBLE')
         <div class="card card-stats card-primary card-round">
         @elseif($room->status == 'OCUPADO')

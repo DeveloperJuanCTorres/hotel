@@ -29,7 +29,7 @@
 <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
     <ul class="nav nav-secondary">
-        <li class="nav-item active">
+        <li class="nav-item">
             <a href="/">
                 <i class="fas fa-home"></i>
                 <p>Dashboard</p>
@@ -46,6 +46,48 @@
                 <i class="fas fa-bed"></i>
                 <p>Habitaciones</p>
             </a>
+        </li>
+        <li class="nav-item submenu">
+            <a data-bs-toggle="collapse" href="#base">
+                <i class="fas fa-layer-group"></i>
+                <p>Contactos</p>
+                <span class="caret"></span>
+            </a>
+            <div class="collapse" id="base">
+                <ul class="nav nav-collapse">
+                    <li>
+                        <a href="#">
+                        <span class="sub-item">Clientes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                        <span class="sub-item">Proveedores</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item active submenu">
+            <a data-bs-toggle="collapse" href="#base">
+                <i class="fas fa-layer-group"></i>
+                <p>Gestión Productos</p>
+                <span class="caret"></span>
+            </a>
+            <div class="collapse show" id="base">
+                <ul class="nav nav-collapse">
+                    <li class="active">
+                        <a href="#">
+                        <span class="sub-item">Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                        <span class="sub-item">Categorías</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
     </ul>
     </div>
