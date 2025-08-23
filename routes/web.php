@@ -25,6 +25,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/rooms', [HomeController::class, 'room'])->name('rooms');
     Route::get('/rooms/list', [HomeController::class, 'list'])->name('rooms.list');
     Route::post('/rooms/updateStatus', [HomeController::class, 'updateStatus'])->name('rooms.updateStatus');
+    Route::post('/rooms/register', [HomeController::class, 'roomRegister'])->name('rooms.register');
+    Route::post('/buscar-documento', [HomeController::class, 'buscarDocumento'])->name('buscar.documento');
 });
 
 // Route::group(['prefix' => 'admin'], function () {

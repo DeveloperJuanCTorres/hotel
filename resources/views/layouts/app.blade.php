@@ -49,6 +49,7 @@
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="assets/css/demo.css" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
     <div id="app">   
@@ -57,7 +58,7 @@
         </main>
     </div>
     <!--   Core JS Files   -->
-    <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/core/jquery-3.7.1.min.js"></script>   
     <script src="assets/js/core/popper.min.js"></script>
     <script src="assets/js/core/bootstrap.min.js"></script>
 

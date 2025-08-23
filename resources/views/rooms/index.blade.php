@@ -36,6 +36,8 @@
           </div>
         </div>
 
+        @include('rooms.partials.create')
+
         @include('utils.footer')
     </div>
 
@@ -44,6 +46,8 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 
 <script>
     function showLoader() {
@@ -85,78 +89,174 @@
 </script>
 
 <script>
-$(document).ready(function(){
-    $(document).on("click", ".room-link", function(e){
-        e.preventDefault();
+    $(document).ready(function(){
+        $(document).on("click", ".room-link", function(e){
+            e.preventDefault();
 
-        let id     = $(this).data("id");
-        let status = $(this).data("status");
-        let numero = $(this).data("numero");
-        let type   = $(this).data("type");
+            let id     = $(this).data("id");
+            let status = $(this).data("status");
+            let numero = $(this).data("numero");
+            let type   = $(this).data("type");
+            let description   = $(this).data("description");
+            let price   = $(this).data("price");
 
-        if (status == "LIMPIEZA") {
-            Swal.fire({
-                title: `Habitación ${numero} (${type})`,
-                text: `Estado actual: ${status}`,
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "Cambiar a Disponible",
-                cancelButtonText: "Cancelar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{{ route('rooms.updateStatus') }}",
-                        type: "POST",
-                        data: {
-                            id: id,
-                            status: status,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(response){
-                            if(response.status){
-                                loadRooms()
-                                const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
+            if (status == "DISPONIBLE") {
+                // pasar info al modal
+                $('#roomNumero').text(numero);
+                $('#roomType').text(type);
+                $('#roomStatus').text(status);
+                $('#roomDescription').text(description);
+                $('#roomPrice').val(price);
+                $('#roomId').val(id);
+                
+                // abrir modal
+                $('#roomModal').modal('show');
+                // alert("test.");
+            }
+
+            if (status == "LIMPIEZA") {
+                Swal.fire({
+                    title: `Habitación ${numero} (${type})`,
+                    text: `Estado actual: ${status}`,
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Finalizar Limpieza",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('rooms.updateStatus') }}",
+                            type: "POST",
+                            data: {
+                                id: id,
+                                status: status,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response){
+                                if(response.status){
+                                    loadRooms()
+                                    const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                    });
+                                    Toast.fire({
+                                    icon: "success",
+                                    title: response.msg
+                                    });
+                                } else {
+                                    const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                    });
+                                    Toast.fire({
+                                    icon: "error",
+                                    title: response.msg
+                                    });
                                 }
-                                });
-                                Toast.fire({
-                                icon: "success",
-                                title: response.msg
-                                });
-                            } else {
-                                const Toast = Swal.mixin({
-                                toast: true,
-                                position: "top-end",
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.onmouseenter = Swal.stopTimer;
-                                    toast.onmouseleave = Swal.resumeTimer;
-                                }
-                                });
-                                Toast.fire({
-                                icon: "error",
-                                title: response.msg
-                                });
+                            },
+                            error: function(){
+                                Swal.fire("Error", "Hubo un problema en el servidor", "error");
                             }
-                        },
-                        error: function(){
-                            Swal.fire("Error", "Hubo un problema en el servidor", "error");
-                        }
-                    });
+                        });
+                    }
+                });
+            }        
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $(document).on("click", ".registrar", function(e){
+            e.preventDefault();
+
+            $id = $('#roomId').val();
+            $tipo_doc = $('#tipo_doc').val();
+            $numero_doc = $('#numero_doc').val();
+            $cliente = $('#cliente').val();
+            $direccion = $('#direccion').val();
+            $cant_per = $('#roomCantPer').val();
+            $precio = $('#roomPrice').val();
+            $cant_noches = $('#roomCant').val();
+            $estado_pago = $('#estadoPago').val();
+            $fecha_salida = $('#fechaSalida').val();
+            $hora_salida = $('#horaSalida').val();
+      
+
+            $.ajax({
+                url: "{{ route('rooms.register') }}",
+                type: "POST",
+                data: {
+                    id: $id,
+                    tipo_doc: $tipo_doc,
+                    numero_doc: $numero_doc,
+                    cliente: $cliente,
+                    direccion: $direccion,
+                    cant_per: $cant_per,
+                    precio: $precio,
+                    cant_noches: $cant_noches,
+                    estado_pago: $estado_pago,
+                    fecha_salida: $fecha_salida,
+                    hora_salida: $hora_salida,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response){
+                    if(response.status){
+                        $('#roomModal').modal('hide');
+                        loadRooms()
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: response.msg
+                        });
+                    } else {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "error",
+                            title: response.msg
+                        });
+                    }
+                },
+                error: function(){
+                    Swal.fire("Error", "Hubo un problema en el servidor", "error");
                 }
             });
-        }        
+        });
     });
-});
 </script>
 
 @endsection
