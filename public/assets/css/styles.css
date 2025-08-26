@@ -1,3 +1,10 @@
 .card-stats .icon-big {
     min-height: 20px !important;
 }
+
+.table thead th {
+    text-transform: none;   /* respeta mayúsculas/minúsculas */
+    font-family: inherit;   /* usa la misma fuente que el body */
+    font-size: inherit;     /* (opcional) mismo tamaño que el texto normal */
+    font-weight: bold;   /* (opcional) mismo grosor que el texto normal */
+}

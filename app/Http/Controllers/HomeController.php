@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\Room;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -43,18 +46,49 @@ class HomeController extends Controller
     public function roomRegister(Request $request)
     {
         try {
-            $cliente = $request->cliente;
+            $cliente = Contact::where('numero_doc', $request->numero_doc)->first();
+            if ($cliente == null) {
+                $contact = new Contact();
+                $contact->tipo_doc = $request->tipo_doc;
+                $contact->numero_doc = $request->numero_doc;
+                $contact->name = $request->cliente;
+                $contact->address = $request->direccion;
+                $contact->type = 'CLIENTE';
+                $contact->save();
+                $huesped = $contact;
+            }
+            else{
+                $huesped = $cliente;
+            }
+
+            $transaction = new Transaction();
+            $transaction->room_id = $request->id;
+            $transaction->contact_id = $huesped->id;
+            $transaction->cant_personas = $request->cant_per;
+            $transaction->precio_unitario = $request->precio;
+            $transaction->cant_noches = $request->cant_noches;
+            $transaction->total = $request->precio * $request->cant_noches;
+            $transaction->estado_pago = $request->estado_pago;
+            $transaction->fecha_entrada = Carbon::now();
+            $transaction->fecha_salida = $request->fecha_salida;
+            $transaction->hora_salida = $request->hora_salida;
+            $transaction->status = 0;
+            $transaction->save();
+
+            $transaction->ref_nro = "TR-" . $transaction->id;
+            $transaction->save();
+
             $room = Room::findOrFail($request->id);
             $room->status = "OCUPADO";
             $room->save();
             return response()->json([
                 'status' => true,
-                'msg' => 'El cliente: ' . $cliente . ' se alojo exitosamente.'
+                'msg' => 'El huesped: ' . $request->cliente . ' se alojo exitosamente.'
             ]);         
             
             } catch (\Throwable $th) {
                 return response()->json([
-                    'status' => true,
+                    'status' => false,
                     'msg' => $th->getMessage()
                 ]);
         }        
@@ -120,5 +154,28 @@ class HomeController extends Controller
         }
 
         return response()->json(['success' => false, 'msg' => 'Error en API externa']);
+    }
+
+    public function buscarTransaccion($id)
+    {
+        $habitacion = Room::where('status', 'OCUPADO')->findOrFail($id);
+
+        // Ejemplo: buscar transacción activa de esa habitación
+        $transaccion = Transaction::where('room_id', $habitacion->id)
+            ->where('status', 0) // o el campo que uses
+            ->first();
+
+        if (!$transaccion) {
+            return response()->json(['error' => 'No se encontró transacción activa'], 404);
+        }
+
+        return response()->json(['transaccion_id' => $transaccion->id]);
+    }
+
+    public function detalle($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+
+        return view('rooms.detalle', compact('transaction'));
     }
 }

@@ -27,6 +27,14 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/rooms/updateStatus', [HomeController::class, 'updateStatus'])->name('rooms.updateStatus');
     Route::post('/rooms/register', [HomeController::class, 'roomRegister'])->name('rooms.register');
     Route::post('/buscar-documento', [HomeController::class, 'buscarDocumento'])->name('buscar.documento');
+
+    // Para buscar la transacción activa de la habitación
+    Route::get('/habitacion/{id}/buscar-transaccion', [HomeController::class, 'buscarTransaccion'])
+        ->name('habitacion.buscarTransaccion');
+
+    // Para ver el detalle en una vista blade
+    Route::get('/transaccion/{id}/detalle', [HomeController::class, 'detalle'])
+        ->name('transaccion.detalle');
 });
 
 // Route::group(['prefix' => 'admin'], function () {
