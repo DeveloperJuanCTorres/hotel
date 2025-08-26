@@ -174,7 +174,37 @@
                         });
                     }
                 });
-            }        
+            }
+            
+            if (status == "OCUPADO") {
+                Swal.fire({
+                    title: `Habitación ${numero} (${type})`,
+                    text: `Estado actual: ${status}`,
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Ver detalle",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/habitacion/' + id + '/buscar-transaccion',
+                            type: "GET",
+                            data: {
+                                id: id,
+                                status: status,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response){
+                                // Redirige a la vista detalle de transacción
+                                window.location.href = '/transaccion/' + response.transaccion_id + '/detalle';
+                            },
+                            error: function(){
+                                Swal.fire("Error", "Hubo un problema en el servidor", "error");
+                            }
+                        });
+                    }
+                });
+            }  
         });
     });
 </script>
