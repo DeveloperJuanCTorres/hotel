@@ -77,12 +77,12 @@
             <div class="collapse show" id="base">
                 <ul class="nav nav-collapse">
                     <li class="active">
-                        <a href="#">
+                        <a href="/products">
                         <span class="sub-item">Productos</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="/categories">
                         <span class="sub-item">Categorías</span>
                         </a>
                     </li>
