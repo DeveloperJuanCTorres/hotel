@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +46,20 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/categories/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::post('/categories/update', [CategoryController::class, 'update'])->name('categories.update');
     Route::post('/categories/delet', [CategoryController::class, 'destroy'])->name('categories.delet');
+
+    Route::get('/clients', [ContactController::class, 'index'])->name('clients');
+    Route::get('/clients/list', [ContactController::class, 'list'])->name('clients.list');
+    Route::post('/clients/store', [ContactController::class, 'store'])->name('clients.store');
+    Route::post('/clients/edit', [ContactController::class, 'edit'])->name('clients.edit');
+    Route::post('/clients/update', [ContactController::class, 'update'])->name('clients.update');
+    Route::post('/clients/delet', [ContactController::class, 'destroy'])->name('clients.delet');
+
+    Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers');
+    Route::get('/suppliers/list', [SupplierController::class, 'list'])->name('suppliers.list');
+    Route::post('/suppliers/store', [SupplierController::class, 'store'])->name('suppliers.store');
+    Route::post('/suppliers/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::post('/suppliers/update', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::post('/suppliers/delet', [SupplierController::class, 'destroy'])->name('suppliers.delet');
     
 
     // Para buscar la transacción activa de la habitación

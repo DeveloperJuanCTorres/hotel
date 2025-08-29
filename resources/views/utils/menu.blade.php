@@ -56,12 +56,12 @@
             <div class="collapse" id="base">
                 <ul class="nav nav-collapse">
                     <li>
-                        <a href="#">
+                        <a href="/clients">
                         <span class="sub-item">Clientes</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="/suppliers">
                         <span class="sub-item">Proveedores</span>
                         </a>
                     </li>
