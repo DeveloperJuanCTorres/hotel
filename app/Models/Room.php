@@ -19,4 +19,9 @@ class Room extends Model
     {
         return $this->hasMany(Transaction::class, "room_id", "id");
     }
+
+    public function reservation()
+    {
+        return $this->hasMany(Reservation::class, "room_id", "id");
+    }
 }

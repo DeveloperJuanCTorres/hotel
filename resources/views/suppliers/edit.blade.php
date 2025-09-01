@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-ml">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Editar Cliente</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Editar Proveedor</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -31,9 +31,9 @@
                                         id="edit_numero_doc"
                                         name="numero_doc"
                                     />
-                                    <button class="btn btn-primary"type="button" id="btnBuscar">
+                                    <button class="btn btn-primary"type="button" id="edit_btnBuscar">
                                         <span class="input-icon-addon">
-                                        <i class="fa fa-search" id="iconBuscar"></i>
+                                        <i class="fa fa-search" id="edit_iconBuscar"></i>
                                         </span>
                                     </button>
                                 </div>
@@ -74,6 +74,96 @@
         </div>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#edit_btnBuscar').on('click', function() {
+            let tipo = $('#edit_tipo_doc').val();
+            let numero = $('#edit_numero_doc').val();
+            let $btn = $(this);
+            let $icon = $('#edit_iconBuscar');
+
+            // Mostrar loader (spinner)
+            $icon.removeClass('fa-search').addClass('fa-spinner fa-spin');
+
+            if(numero === ''){
+                alert("Ingrese número de documento");
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('buscar.documento') }}", 
+                type: "POST",
+                data: {
+                    tipo_doc: tipo,
+                    numero_doc: numero,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response){
+                    if(response.success){
+                        if(tipo === 'DNI'){
+                            $('#edit_name').val(response.data.nombre_completo);
+                            $('#edit_address').val('');
+                        }else if(tipo === 'RUC'){
+                            $('#edit_name').val(response.data.nombre_o_razon_social);
+                            $('#edit_address').val(response.data.direccion_completa);
+                        }
+                    }else{
+                        alert("No se encontró información");
+                    }
+                },
+                error: function(xhr){
+                    console.log(xhr.responseText);
+                    alert("Error en la consulta");
+                },
+                complete: function(){
+                    // Restaurar ícono original
+                    $icon.removeClass('fa-spinner fa-spin').addClass('fa-search');
+                }
+            });
+        });
+
+        // Validar mientras escribe
+        $('#edit_numero_doc').on('input', function () {
+            let tipo = $('#edit_tipo_doc').val();
+
+            if (tipo === 'DNI' || tipo === 'RUC') {
+                // Solo números
+                this.value = this.value.replace(/[^0-9]/g, '');
+            } else if (tipo === 'PASAPORTE') {
+                // Solo alfanumérico (letras y números)
+                this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+            }
+        });
+        
+        // Cambiar longitud máxima según tipo_doc
+        $('#edit_tipo_doc').on('change', function () {
+            let tipo = $(this).val();
+
+            if (tipo === 'DNI') {               
+                $('#edit_numero_doc').attr('maxlength', 8);
+                $('#edit_numero_doc').val($('#edit_numero_doc').val().slice(0, 8)); // recortar si excede
+                 $('#edit_numero_doc').value.replace(/[^0-9]/g, ''); // elimina todo lo que no sea número
+            } else if (tipo === 'RUC') {                              
+                $('#edit_numero_doc').attr('maxlength', 11);
+                $('#edit_numero_doc').val($('#edit_numero_doc').val().slice(0, 11)); // recortar si excede
+                $('#edit_numero_doc').value.replace(/[^0-9]/g, ''); // elimina todo lo que no sea número
+            }
+            if (tipo === 'PASAPORTE') {
+                $('#edit_numero_doc').attr('maxlength', 20);
+                $('#edit_numero_doc').val($('#edit_numero_doc').val().slice(0, 20)); // recortar si excede
+            }
+        });
+
+        // Forzar la longitud inicial al abrir modal (por si cambia)
+        $('#edit_tipo_doc').trigger('change');
+
+        // Forzar reglas al cargar
+        $('#edit_tipo_doc').trigger('change');
+    });
+</script>
 
 
 

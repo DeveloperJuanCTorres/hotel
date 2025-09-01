@@ -33,13 +33,51 @@ class HomeController extends Controller
 
     public function room()
     {
-        $rooms = Room::all();
+        // $rooms = Room::all();
+        // return view('rooms.index', compact('rooms'));
+
+        $today = Carbon::now();
+
+        $rooms = Room::with('type', 'reservation')->get();
+
+        foreach ($rooms as $room) {
+            $hasReservationToday = $room->reservation()
+                ->whereDate('fecha_inicio', '<=', $today)
+                ->whereDate('fecha_fin', '>=', $today)
+                ->exists();
+
+            if ($hasReservationToday) {
+                $room->status = 'RESERVADO';
+            }
+
+            $room->save();
+        }
+
         return view('rooms.index', compact('rooms'));
     }
 
     public function list()
     {
-        $rooms = Room::with('type')->get();
+        // $rooms = Room::with('type')->get();
+        // return view('rooms.partials.list', compact('rooms'));
+
+        $today = Carbon::now();
+
+        $rooms = Room::with('type', 'reservation')->get();
+
+        foreach ($rooms as $room) {
+            $hasReservationToday = $room->reservation()
+                ->whereDate('fecha_inicio', '<=', $today)
+                ->whereDate('fecha_fin', '>=', $today)
+                ->exists();
+
+            if ($hasReservationToday) {
+                $room->status = 'RESERVADO';
+            }
+
+            $room->save();
+        }
+
         return view('rooms.partials.list', compact('rooms'));
     }
 

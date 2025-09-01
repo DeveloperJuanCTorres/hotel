@@ -8,3 +8,27 @@
     font-size: inherit;     /* (opcional) mismo tamaño que el texto normal */
     font-weight: bold;   /* (opcional) mismo grosor que el texto normal */
 }
+
+/* DATATABLE */
+/* Cambiar tamaño de letra general de la tabla */
+#basic-datatables {
+    font-size: 12px; /* Ajusta según lo que necesites */
+}
+
+/* Cambiar tamaño de letra en cabecera */
+#basic-datatables thead th {
+    font-size: 14px;
+}
+
+/* Cambiar tamaño de letra en filas */
+#basic-datatables tbody td {
+    font-size: 12px;
+}
+
+/* Cambiar tamaño en el buscador y paginación */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    font-size: 13px;
+}

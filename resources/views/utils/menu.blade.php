@@ -29,7 +29,7 @@
 <div class="sidebar-wrapper scrollbar scrollbar-inner">
     <div class="sidebar-content">
     <ul class="nav nav-secondary">
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('/') ? 'active' : '' }}">
             <a href="/">
                 <i class="fas fa-home"></i>
                 <p>Dashboard</p>
@@ -41,26 +41,32 @@
             </span>
             <h4 class="text-section">Componentes</h4>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {{ request()->is('rooms*') ? 'active' : '' }}">
             <a href="/rooms">
                 <i class="fas fa-bed"></i>
                 <p>Habitaciones</p>
             </a>
         </li>
+        <li class="nav-item {{ request()->is('reservations*') ? 'active' : '' }}">
+            <a href="/reservations">
+                <i class="fas fa-calendar-alt"></i>
+                <p>Reservas</p>
+            </a>
+        </li>
         <li class="nav-item submenu">
             <a data-bs-toggle="collapse" href="#base">
-                <i class="fas fa-layer-group"></i>
+                <i class="fas fa-users"></i>
                 <p>Contactos</p>
                 <span class="caret"></span>
             </a>
-            <div class="collapse" id="base">
+            <div class="collapse {{ request()->is('clients*') || request()->is('suppliers*') ? 'show' : '' }}" id="base">
                 <ul class="nav nav-collapse">
-                    <li>
+                    <li class="{{ request()->is('clients*') ? 'active' : '' }}">
                         <a href="/clients">
                         <span class="sub-item">Clientes</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="{{ request()->is('suppliers*') ? 'active' : '' }}">
                         <a href="/suppliers">
                         <span class="sub-item">Proveedores</span>
                         </a>
@@ -68,20 +74,20 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item active submenu">
+        <li class="nav-item submenu">
             <a data-bs-toggle="collapse" href="#base">
-                <i class="fas fa-layer-group"></i>
+                <i class="fas fa-boxes"></i>
                 <p>Gestión Productos</p>
                 <span class="caret"></span>
             </a>
-            <div class="collapse show" id="base">
+            <div class="collapse {{ request()->is('products*') || request()->is('categories*') ? 'show' : '' }}" id="base">
                 <ul class="nav nav-collapse">
-                    <li class="active">
+                    <li class="{{ request()->is('products*') ? 'active' : '' }}">
                         <a href="/products">
                         <span class="sub-item">Productos</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="{{ request()->is('categories*') ? 'active' : '' }}">
                         <a href="/categories">
                         <span class="sub-item">Categorías</span>
                         </a>
