@@ -24,4 +24,9 @@ class Contact extends Model
     {
         return $this->hasMany(Transaction::class, "contact_id", "id");
     }
+
+    public function reservation()
+    {
+        return $this->hasMany(Reservation::class, "contact_id", "id");
+    }
 }

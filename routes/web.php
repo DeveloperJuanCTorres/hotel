@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +61,14 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/suppliers/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::post('/suppliers/update', [SupplierController::class, 'update'])->name('suppliers.update');
     Route::post('/suppliers/delet', [SupplierController::class, 'destroy'])->name('suppliers.delet');
+
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
+    Route::get('/reservations/list', [ReservationController::class, 'list'])->name('reservations.list');
+    Route::post('/reservations/store', [ReservationController::class, 'store'])->name('reservations.store');
+    Route::post('/reservations/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
+    Route::post('/reservations/update', [ReservationController::class, 'update'])->name('reservations.update');
+    Route::post('/reservations/delet', [ReservationController::class, 'destroy'])->name('reservations.delet');
+    Route::post('/reservations/disponibles', [ReservationController::class, 'getDisponibles']);
     
 
     // Para buscar la transacción activa de la habitación

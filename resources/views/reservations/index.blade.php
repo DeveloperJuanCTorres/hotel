@@ -17,7 +17,7 @@
             <div id="loader-bar" style="display:none; height:4px; background:#007bff; position:fixed; top:0; left:0; width:0%; z-index:9999;"></div>
             
             <div class="page-header">
-              <h3 class="fw-bold mb-3">Clientes</h3>
+              <h3 class="fw-bold mb-3">Reservaciones</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="#">
@@ -28,7 +28,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">Clientes</a>
+                  <a href="#">Reservaciones</a>
                 </li>
                 <li class="separator">
                   <i class="icon-arrow-right"></i>
@@ -53,17 +53,17 @@
                       >
                         <thead>
                           <tr>
-                            <th>Tipo</th>
-                            <th>Numero</th>
-                            <th>Nombre</th>
-                            <th>Dirección</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
+                            <th>Huesped</th>
+                            <th>Habitación</th>
+                            <th>Fecha inicio</th>
+                            <th>Fecha fin</th>
+                            <th>Total</th>
+                            <th>Saldo</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
                         <tbody>
-                            @include('clients.partials.list')
+                            @include('reservations.partials.list')
                         </tbody>
                       </table>
                     </div>
@@ -75,8 +75,8 @@
           </div>
         </div>
 
-        @include('clients.create')
-        @include('clients.edit')
+        @include('reservations.create')
+        @include('reservations.edit')
 
         @include('utils.footer')
     </div>
@@ -117,16 +117,16 @@
         );
     }
 
-    function loadClients() {
+    function loadReservations() {
         showLoader();
         $.ajax({
-            url: "{{ route('clients.list') }}",
+            url: "{{ route('reservations.list') }}",
             type: "GET",
             success: function(data) {
                 $("#clients-container tbody").html(data);
             },
             error: function() {
-                console.error("Error al cargar los clientes");
+                console.error("Error al cargar las reservaciones");
             },
             complete: function() {
                 hideLoader();
@@ -135,13 +135,13 @@
     }
 
     // refrescar cada 20 segundos
-    //setInterval(loadClients, 10000);
+    //setInterval(loadReservations, 10000);
 </script>
 
 <script>
     $(document).ready(function () {
         $("#btnCreate").on("click", function () {
-            $('#createClient').modal('show');
+            $('#createReservation').modal('show');
         });
     });
 </script>
@@ -154,7 +154,7 @@
             let formData = new FormData(document.getElementById("formAgregar"));
 
             $.ajax({
-                url: "{{ route('clients.store') }}",
+                url: "{{ route('reservations.store') }}",
                 type: "POST",
                 data: formData,
                 contentType: false, // necesario para enviar archivos
@@ -164,9 +164,9 @@
                 },
                 success: function (response) {
                     if (response.status) {
-                        $("#createClient").modal("hide");
+                        $("#createReservation").modal("hide");
                         $("#formAgregar")[0].reset();
-                        loadClients(); 
+                        loadReservations(); 
                         const Toast = Swal.mixin({
                             toast: true,
                             position: "top-end",
@@ -211,13 +211,13 @@
 
 <script>
     $(document).ready(function(){
-        $(document).on("click", ".client-edit", function(e){
+        $(document).on("click", ".reservation-edit", function(e){
             e.preventDefault();
 
             let id     = $(this).data("id");
 
             $.ajax({
-                url: "{{ route('clients.edit') }}",
+                url: "{{ route('reservations.edit') }}",
                 type: "POST",
                 data: {
                     id: id,
@@ -233,7 +233,7 @@
                         $('#edit_email').val(response.contact.email);
                         $('#edit_phone').val(response.contact.phone);
                         
-                        $('#editClient').modal('show');
+                        $('#editReservation').modal('show');
                     } else {
                         const Toast = Swal.mixin({
                         toast: true,
@@ -261,20 +261,20 @@
 </script>
 
 <script>
-    $(document).on("submit", "#formEditClient", function(e){
+    $(document).on("submit", "#formEditReservation", function(e){
         e.preventDefault();
 
         let formData = new FormData(this);
 
         $.ajax({
-            url: "{{ route('clients.update') }}",
+            url: "{{ route('reservations.update') }}",
             type: "POST",
             data: formData,
             processData: false,
             contentType: false,
             success: function(response){
                 if(response.status){
-                    $('#editClient').modal('hide');
+                    $('#editReservation').modal('hide');
                     loadClients(); 
                     const Toast = Swal.mixin({
                             toast: true,
@@ -304,25 +304,25 @@
 
 <script>
     $(document).ready(function(){
-        $(document).on("click", ".client-eliminar", function(e){
+        $(document).on("click", ".reservation-eliminar", function(e){
             e.preventDefault();
 
             let id     = $(this).data("id");
             let name     = $(this).data("name");
 
             Swal.fire({
-                title: "Eliminacion de cliente",
-                text: "Estás seguro de eliminar el cliente: " + name + "?",
+                title: "Cancelar reservación",
+                text: "Estás seguro de cancelar la reservación para el cliente: " + name + "?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Si, eliminar",
-                cancelButtonText: "Cancelar"
+                confirmButtonText: "Si, cancelar",
+                cancelButtonText: "Abortar"
                 }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('clients.delet') }}",
+                        url: "{{ route('reservations.delet') }}",
                         type: "POST",
                         data: {
                             id: id,
@@ -345,7 +345,7 @@
                                 icon: "success",
                                 title: response.msg
                                 });
-                                loadClients(); 
+                                loadReservations(); 
                             } else {
                                 const Toast = Swal.mixin({
                                 toast: true,

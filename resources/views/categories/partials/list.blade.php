@@ -5,8 +5,8 @@
         <td>{{$category->description}}</td>
         <td class="text-center">
             <div class="dropdown">
-                <button class="btn btn-primary btn-sm" style="border-radius: 50px;width: 30px; height: 30px;" type="button" id="dropdownMenuButton{{ $category->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-ellipsis-v"></i>
+                <button class="btn btn-primary btn-sm" type="button" id="dropdownMenuButton{{ $category->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                    Opciones<i class="fas fa-angle-down" style="padding-left: 5px;"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $category->id }}">
                     <!-- <li>
