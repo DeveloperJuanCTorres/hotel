@@ -7,16 +7,7 @@ class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bo
     class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
     >
     <div class="input-group">
-        <div class="input-group-prepend">
-        <button type="submit" class="btn btn-search pe-1">
-            <i class="fa fa-search search-icon"></i>
-        </button>
-        </div>
-        <input
-        type="text"
-        placeholder="Search ..."
-        class="form-control"
-        />
+        <a href="/pos" class="btn btn-primary"><i class="fas fa-arrow-circle-right pe-2"></i>POS</a>
     </div>
     </nav>
 
@@ -37,16 +28,17 @@ class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bo
         <ul class="dropdown-menu dropdown-search animated fadeIn">
         <form class="navbar-left navbar-form nav-search">
             <div class="input-group">
-            <input
+                <a href="#" class="btn btn-primary">POS</a>
+            <!-- <input
                 type="text"
                 placeholder="Search ..."
                 class="form-control"
-            />
+            /> -->
             </div>
         </form>
         </ul>
     </li>
-    <li class="nav-item topbar-icon dropdown hidden-caret">
+    <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
         <a
         class="nav-link dropdown-toggle"
         href="#"
@@ -136,7 +128,7 @@ class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bo
             </a>
         </li>
         </ul>
-    </li>
+    </li> -->
     <li class="nav-item topbar-icon dropdown hidden-caret">
         <a
         class="nav-link dropdown-toggle"

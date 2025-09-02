@@ -53,13 +53,13 @@
                 <p>Reservas</p>
             </a>
         </li>
-        <li class="nav-item submenu">
-            <a data-bs-toggle="collapse" href="#base">
+        <li class="nav-item submenu {{ request()->is('clients*') || request()->is('suppliers*') ? 'active' : '' }}">
+            <a data-bs-toggle="collapse" href="#contacts">
                 <i class="fas fa-users"></i>
                 <p>Contactos</p>
                 <span class="caret"></span>
             </a>
-            <div class="collapse {{ request()->is('clients*') || request()->is('suppliers*') ? 'show' : '' }}" id="base">
+            <div class="collapse {{ request()->is('clients*') || request()->is('suppliers*') ? 'show' : '' }}" id="contacts">
                 <ul class="nav nav-collapse">
                     <li class="{{ request()->is('clients*') ? 'active' : '' }}">
                         <a href="/clients">
@@ -74,13 +74,13 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item submenu">
-            <a data-bs-toggle="collapse" href="#base">
+        <li class="nav-item submenu {{ request()->is('products*') || request()->is('categories*') ? 'active' : '' }}">
+            <a data-bs-toggle="collapse" href="#products">
                 <i class="fas fa-boxes"></i>
                 <p>Gestión Productos</p>
                 <span class="caret"></span>
             </a>
-            <div class="collapse {{ request()->is('products*') || request()->is('categories*') ? 'show' : '' }}" id="base">
+            <div class="collapse {{ request()->is('products*') || request()->is('categories*') ? 'show' : '' }}" id="products">
                 <ul class="nav nav-collapse">
                     <li class="{{ request()->is('products*') ? 'active' : '' }}">
                         <a href="/products">
@@ -90,6 +90,79 @@
                     <li class="{{ request()->is('categories*') ? 'active' : '' }}">
                         <a href="/categories">
                         <span class="sub-item">Categorías</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item submenu {{ request()->is('inventories*') || request()->is('purchases*') ? 'active' : '' }}">
+            <a data-bs-toggle="collapse" href="#inventories">
+                <i class="fas fa-edit"></i>
+                <p>Inventario</p>
+                <span class="caret"></span>
+            </a>
+            <div class="collapse {{ request()->is('inventories*') || request()->is('purchases*') ? 'show' : '' }}" id="inventories">
+                <ul class="nav nav-collapse">
+                    <li class="{{ request()->is('inventories*') ? 'active' : '' }}">
+                        <a href="/clients">
+                        <span class="sub-item">KARDEX</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('purchases') ? 'active' : '' }}">
+                        <a href="/suppliers">
+                        <span class="sub-item">Restablecer</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('purchases/detail') ? 'active' : '' }}">
+                        <a href="/suppliers">
+                        <span class="sub-item">Compras</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item submenu {{ request()->is('openings*') || request()->is('closures*') || request()->is('summaries*') ? 'active' : '' }}">
+            <a data-bs-toggle="collapse" href="#openings">
+                <i class="fas fa-cube"></i>
+                <p>Módulo caja</p>
+                <span class="caret"></span>
+            </a>
+            <div class="collapse {{ request()->is('openings*') || request()->is('closures*') || request()->is('summaries*') ? 'show' : '' }}" id="openings">
+                <ul class="nav nav-collapse">
+                    <li class="{{ request()->is('openings*') ? 'active' : '' }}">
+                        <a href="/clients">
+                        <span class="sub-item">Apertura caja</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('closures*') ? 'active' : '' }}">
+                        <a href="/suppliers">
+                        <span class="sub-item">Cierre caja</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('summaries*') ? 'active' : '' }}">
+                        <a href="/suppliers">
+                        <span class="sub-item">Resumen liquidación</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item submenu {{ request()->is('expenses*') ? 'active' : '' }}">
+            <a data-bs-toggle="collapse" href="#openings">
+                <i class="fas fa-table"></i>
+                <p>Egresos</p>
+                <span class="caret"></span>
+            </a>
+            <div class="collapse {{ request()->is('expenses*') ? 'show' : '' }}" id="openings">
+                <ul class="nav nav-collapse">
+                    <li class="{{ request()->is('expenses') ? 'active' : '' }}">
+                        <a href="/clients">
+                        <span class="sub-item">Nuevo egreso</span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->is('expenses/list') ? 'active' : '' }}">
+                        <a href="/suppliers">
+                        <span class="sub-item">Lista egresos</span>
                         </a>
                     </li>
                 </ul>
