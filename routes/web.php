@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MovementController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReservationController;
@@ -72,6 +73,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/reservations/disponibles', [ReservationController::class, 'getDisponibles']);
 
     Route::get('/pos', [PosController::class, 'index'])->name('pos');
+
+    Route::post('/comprobantes/generar', [MovementController::class, 'generar']);
     
 
     // Para buscar la transacción activa de la habitación
