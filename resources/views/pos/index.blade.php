@@ -134,7 +134,7 @@
                             </div> 
                             <div class="col-lg-12 col-md-12 col-12">
                                 <div class="form-group">
-                                    <button class="btn btn-success w-100"><i class="fas fa-money-bill-alt px-2"></i>Duardar venta</button>
+                                    <button class="btn btn-success w-100"><i class="fas fa-money-bill-alt px-2"></i>Guardar venta</button>
                                 </div> 
                             </div>                             
                         </div>
