@@ -94,7 +94,7 @@ class MovementController extends Controller
                 "descuento"=> "",
                 "subtotal"=> ($valor_unitario_sin_igv*$request->total_dias),
                 "tipo_de_igv"=> 1,
-                "igv"=> $valor_unitario_igv,
+                "igv"=> $total_igv,
                 "total"=> $request->total,
                 "anticipo_regularizacion"=> false,
                 "anticipo_documento_serie"=> "",
