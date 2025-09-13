@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="wrapper">
+<div class="wrapper sidebar_minimize">
     @include('utils.menu')
 
     <div class="main-panel">
@@ -149,6 +149,7 @@
                 // Limpiar selects
                 $("#taxonomy_id").empty();
                 $("#unit_id").empty();
+                $("#igv_type_id").empty();
 
                 // Llenar categorías
                 if (response.categorias && response.categorias.length > 0) {
@@ -166,6 +167,16 @@
                     });
                 } else {
                     $("#unit_id").append('<option value="">Sin unidades</option>');
+                }
+
+                // Llenar tipos de igv
+                if (response.igv && response.igv.length > 0) {
+                    $("#igv_type_id").append('<option value="">-Seleccionar-</option>');
+                    $.each(response.igv, function (i, igv) {
+                    $("#igv_type_id").append('<option value="' + igv.id + '">' + igv.name + '</option>');
+                    });
+                } else {
+                    $("#igv_type_id").append('<option value="">Sin Tipo de IGV</option>');
                 }
 
                 // Mostrar modal SOLO cuando ya tenemos los datos
@@ -265,6 +276,7 @@
                         $('#edit_description').val(response.product.description);
                         $('#edit_price').val(response.product.price);
                         $('#edit_stock').val(response.product.stock);
+                        $('#edit_price_compra').val(response.product.price_compra);
                         // Mostrar imagen si existe
                         if (response.product.image) {
                             $('#view_image')
@@ -276,6 +288,7 @@
                         // Limpiar selects
                         $("#edit_taxonomy_id").empty();
                         $("#edit_unit_id").empty();
+                        $("#edit_igv_type_id").empty();
 
                         // Llenar categorías
                         if (response.categorias && response.categorias.length > 0) {
@@ -296,6 +309,18 @@
                         } else {
                             $("#edit_unit_id").append('<option value="">Sin unidades</option>');
                         }
+
+                        // Llenar tipos de igv
+                        if (response.igv && response.igv.length > 0) {
+                            $("#edit_igv_type_id").append('<option value="">-Seleccionar-</option>');
+                            $.each(response.igv, function (i, igv) {
+                                $("#edit_igv_type_id").append('<option value="' + igv.id + '">' + igv.name + '</option>');
+                            });
+                            $("#edit_igv_type_id").val(response.product.igv_type_id);
+                        } else {
+                            $("#edit_igv_type_id").append('<option value="">Sin Tipo de IGV</option>');
+                        }
+
                         $('#editProduct').modal('show');
                     } else {
                         const Toast = Swal.mixin({

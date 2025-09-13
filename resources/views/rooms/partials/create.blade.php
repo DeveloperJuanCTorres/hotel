@@ -8,6 +8,11 @@
       </div>
       <div class="modal-body">
         <h4>Datos de la Habitación</h4>
+        @if($caja_abierta)
+            <input type="hidden" class="form-control" id="boxe_opening_id" name="boxe_opening_id" value="{{$caja_abierta->id}}">
+        @else
+            <input type="hidden" class="form-control" id="boxe_opening_id" name="boxe_opening_id" value="0">
+        @endif
         <div class="row">
             <div class="col-md-6 col-12">
                 <input class="form-control d-none" type="text" id="roomId" readonly>
@@ -97,13 +102,24 @@
                     <div class=" row mx-2">
                         <h4 class="left">Total a pagar:  S/. <span id="roomTotal"></span></h4>
                     </div>
-                    <div class="col-lg-8 col-md-12 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="form-group">
-                            <label for="tipo_doc">Estado de Pago</label>
-                            <select class="form-select form-control" name="cant_personas" id="estadoPago">
+                            <label for="estado_pago">Estado de Pago</label>
+                            <select class="form-select form-control" name="estado_pago" id="estado_pago">
                                 <option value="0">--Selecciona--</option>
                                 <option value="pagado">Pagado</option>
                                 <option value="credito">Falta pagar</option>
+                            </select>
+                        </div>                       
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12" id="div_metodo_pago" style="display: none;">
+                        <div class="form-group">
+                            <label for="pay_method_id">Método de Pago</label>
+                            <select class="form-select form-control" name="pay_method_id" id="pay_method_id">
+                                @foreach($pay_methods as $method)
+                                <option value="{{$method->id}}">{{$method->name}}</option>
+                                @endforeach
                             </select>
                         </div>                       
                     </div>
@@ -131,6 +147,22 @@
     </div>
   </div>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const estadoPago = document.getElementById("estado_pago");
+        const divMetodoPago = document.getElementById("div_metodo_pago");
+
+        estadoPago.addEventListener("change", function() {
+            if (this.value === "pagado") {
+                divMetodoPago.style.display = "block";
+            } else {
+                divMetodoPago.style.display = "none";
+            }
+        });
+    });
+</script>
 
 <script>
     function calcularTotal() {

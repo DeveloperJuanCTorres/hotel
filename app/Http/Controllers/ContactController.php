@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeOpening;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\AssignOp\Concat;
@@ -11,8 +12,9 @@ class ContactController extends Controller
     public function index()
     {
         $clients = Contact::where('type','CLIENTE')->get();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
 
-        return view('clients.index', compact('clients'));
+        return view('clients.index', compact('clients','caja_abierta'));
     }
 
     public function list()

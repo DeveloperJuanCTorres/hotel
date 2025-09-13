@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeOpening;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,9 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Contact::where('type','PROVEEDOR')->get();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
 
-        return view('suppliers.index', compact('suppliers'));
+        return view('suppliers.index', compact('suppliers','caja_abierta'));
     }
 
     public function list()

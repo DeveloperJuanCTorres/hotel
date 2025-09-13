@@ -1,12 +1,18 @@
 <?php
 
+use App\Http\Controllers\BoxeOpeningController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KardexController;
 use App\Http\Controllers\MovementController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
@@ -72,7 +78,40 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/reservations/delet', [ReservationController::class, 'destroy'])->name('reservations.delet');
     Route::post('/reservations/disponibles', [ReservationController::class, 'getDisponibles']);
 
+    Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses');
+    Route::get('/expenses/list', [ExpenseController::class, 'list'])->name('expenses.list');
+     Route::get('/expenses/form-data', [ExpenseController::class, 'getFormData'])->name('expenses.form.data');
+    Route::post('/expenses/store', [ExpenseController::class, 'store'])->name('expenses.store');
+    Route::post('/expenses/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
+    Route::post('/expenses/update', [ExpenseController::class, 'update'])->name('expenses.update');
+    Route::post('/expenses/delet', [ExpenseController::class, 'destroy'])->name('expenses.delet');
+
+    Route::get('/expenses/cat', [ExpenseCategoryController::class, 'index'])->name('expensescat');
+    Route::get('/expenses/cat/list', [ExpenseCategoryController::class, 'list'])->name('expensescat.list');
+    Route::post('/expenses/cat/store', [ExpenseCategoryController::class, 'store'])->name('expensescat.store');
+    Route::post('/expenses/cat/edit', [ExpenseCategoryController::class, 'edit'])->name('expensescat.edit');
+    Route::post('/expenses/cat/update', [ExpenseCategoryController::class, 'update'])->name('expensescat.update');
+    Route::post('/expenses/cat/delet', [ExpenseCategoryController::class, 'destroy'])->name('expensescat.delet');
+
     Route::get('/pos', [PosController::class, 'index'])->name('pos');
+
+    Route::get('/opening', [BoxeOpeningController::class, 'index'])->name('openings');
+    Route::get('/opening/list', [BoxeOpeningController::class, 'list'])->name('openings.list');
+    Route::post('/opening/view', [BoxeOpeningController::class, 'view'])->name('openings.view');
+    Route::post('/opening/store', [BoxeOpeningController::class, 'store'])->name('openings.store');
+    Route::get('/opening/form-data', [BoxeOpeningController::class, 'getFormData'])->name('opening.form.data');
+
+    Route::get('/caja/{id}/preview-cierre', [BoxeOpeningController::class, 'previewCierre']);
+    Route::post('/caja/{id}/cerrar', [BoxeOpeningController::class, 'cerrarCaja']);
+    Route::get('/caja/closure/{id}/print', [BoxeOpeningController::class, 'print'])->name('caja.print');
+
+    Route::post('/sale/store', [SalesController::class, 'store'])->name('sales.store');
+
+    Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
+    Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
+    Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
+
+    Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
 
     Route::post('/comprobantes/generar', [MovementController::class, 'generar']);
     
