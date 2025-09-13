@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="wrapper">
+<div class="wrapper sidebar_minimize">
     @include('utils.menu')
 
     <div class="main-panel">
@@ -141,11 +141,10 @@
                             </div>
                             <div class="col-lg-3 col-md-4 col-12">
                                 <div class="d-flex justify-content-end align-items-center px-4 py-2">
-                                    <select class="form-control" name="" id="tipo_pago">
-                                        <option value="0">--Seleccionar--</option>
-                                        <option value="EFECTIVO">Efectivo</option>
-                                        <option value="TARJETA">Tarjeta</option>
-                                        <option value="DEPOSITO">Deposito</option>
+                                    <select class="form-control" name="" id="tipo_pago" disabled>
+                                        @foreach($pay_methods as $method)
+                                        <option value="{{$method->id}}" {{ $transaction->pay_method_id == $method->id ? 'selected' : '' }}>{{$method->name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>

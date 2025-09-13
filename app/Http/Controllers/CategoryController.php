@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeOpening;
 use App\Models\Taxonomy;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,9 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Taxonomy::all();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
 
-        return view('categories.index', compact('categories'));
+        return view('categories.index', compact('categories','caja_abierta'));
     }
 
     public function list()

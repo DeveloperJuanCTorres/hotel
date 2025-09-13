@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeOpening;
 use App\Models\Contact;
+use App\Models\PayMethod;
 use App\Models\Room;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -28,7 +30,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
+        
+        return view('dashboard',compact('caja_abierta'));
     }
 
     public function room()
@@ -39,6 +43,8 @@ class HomeController extends Controller
         $today = Carbon::now();
 
         $rooms = Room::with('type', 'reservation')->get();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
+        $pay_methods = PayMethod::all();
 
         foreach ($rooms as $room) {
             $hasReservationToday = $room->reservation()
@@ -53,7 +59,7 @@ class HomeController extends Controller
             $room->save();
         }
 
-        return view('rooms.index', compact('rooms'));
+        return view('rooms.index', compact('rooms','pay_methods', 'caja_abierta'));
     }
 
     public function list()
@@ -107,10 +113,12 @@ class HomeController extends Controller
             $transaction->cant_noches = $request->cant_noches;
             $transaction->total = $request->precio * $request->cant_noches;
             $transaction->estado_pago = $request->estado_pago;
+            $transaction->pay_method_id = $request->pay_method_id;
             $transaction->fecha_entrada = Carbon::now();
             $transaction->fecha_salida = $request->fecha_salida;
             $transaction->hora_salida = $request->hora_salida;
             $transaction->status = 0;
+            $transaction->boxe_opening_id = $request->boxe_opening_id;
             $transaction->save();
 
             $transaction->ref_nro = "TR-" . $transaction->id;
@@ -197,6 +205,7 @@ class HomeController extends Controller
     public function buscarTransaccion($id)
     {
         $habitacion = Room::where('status', 'OCUPADO')->findOrFail($id);
+        
 
         // Ejemplo: buscar transacción activa de esa habitación
         $transaccion = Transaction::where('room_id', $habitacion->id)
@@ -207,13 +216,16 @@ class HomeController extends Controller
             return response()->json(['error' => 'No se encontró transacción activa'], 404);
         }
 
-        return response()->json(['transaccion_id' => $transaccion->id]);
+        return response()->json([
+            'transaccion_id' => $transaccion->id]);
     }
 
     public function detalle($id)
     {
         $transaction = Transaction::findOrFail($id);
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
+        $pay_methods = PayMethod::all();
 
-        return view('rooms.detalle', compact('transaction'));
+        return view('rooms.detalle', compact('transaction','caja_abierta','pay_methods'));
     }
 }

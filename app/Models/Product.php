@@ -18,6 +18,8 @@ class Product extends Model
         'price',
         'stock',
         'image',
+        'igv_type_id',
+        'price_compra'
     ];
 
     public function taxonomy()
@@ -28,5 +30,10 @@ class Product extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function igvtype()
+    {
+        return $this->belongsTo(IgvType::class);
     }
 }

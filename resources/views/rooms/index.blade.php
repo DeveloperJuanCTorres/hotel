@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="wrapper">
+<div class="wrapper sidebar_minimize">
     @include('utils.menu')
 
     <div class="main-panel">
@@ -100,111 +100,134 @@
             let description   = $(this).data("description");
             let price   = $(this).data("price");
 
-            if (status == "DISPONIBLE") {
-                // pasar info al modal
-                $('#roomNumero').text(numero);
-                $('#roomType').text(type);
-                $('#roomStatus').text(status);
-                $('#roomDescription').text(description);
-                $('#roomPrice').val(price);
-                $('#roomId').val(id);
-                
-                // abrir modal
-                $('#roomModal').modal('show');
-                // alert("test.");
-            }
+            let boxe_opening_id = $('#boxe_opening_id').val();
 
-            if (status == "LIMPIEZA") {
-                Swal.fire({
-                    title: `Habitación ${numero} (${type})`,
-                    text: `Estado actual: ${status}`,
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonText: "Finalizar Limpieza",
-                    cancelButtonText: "Cancelar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('rooms.updateStatus') }}",
-                            type: "POST",
-                            data: {
-                                id: id,
-                                status: status,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response){
-                                if(response.status){
-                                    loadRooms()
-                                    const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: "top-end",
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.onmouseenter = Swal.stopTimer;
-                                        toast.onmouseleave = Swal.resumeTimer;
+            if (boxe_opening_id != 0) {               
+            
+                if (status == "DISPONIBLE") {
+                    // pasar info al modal
+                    $('#roomNumero').text(numero);
+                    $('#roomType').text(type);
+                    $('#roomStatus').text(status);
+                    $('#roomDescription').text(description);
+                    $('#roomPrice').val(price);
+                    $('#roomId').val(id);
+                    
+                    // abrir modal
+                    $('#roomModal').modal('show');
+                    // alert("test.");
+                }
+
+                if (status == "LIMPIEZA") {
+                    Swal.fire({
+                        title: `Habitación ${numero} (${type})`,
+                        text: `Estado actual: ${status}`,
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Finalizar Limpieza",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "{{ route('rooms.updateStatus') }}",
+                                type: "POST",
+                                data: {
+                                    id: id,
+                                    status: status,
+                                    _token: "{{ csrf_token() }}"
+                                },
+                                success: function(response){
+                                    if(response.status){
+                                        loadRooms()
+                                        const Toast = Swal.mixin({
+                                        toast: true,
+                                        position: "top-end",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: (toast) => {
+                                            toast.onmouseenter = Swal.stopTimer;
+                                            toast.onmouseleave = Swal.resumeTimer;
+                                        }
+                                        });
+                                        Toast.fire({
+                                        icon: "success",
+                                        title: response.msg
+                                        });
+                                    } else {
+                                        const Toast = Swal.mixin({
+                                        toast: true,
+                                        position: "top-end",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        didOpen: (toast) => {
+                                            toast.onmouseenter = Swal.stopTimer;
+                                            toast.onmouseleave = Swal.resumeTimer;
+                                        }
+                                        });
+                                        Toast.fire({
+                                        icon: "error",
+                                        title: response.msg
+                                        });
                                     }
-                                    });
-                                    Toast.fire({
-                                    icon: "success",
-                                    title: response.msg
-                                    });
-                                } else {
-                                    const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: "top-end",
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.onmouseenter = Swal.stopTimer;
-                                        toast.onmouseleave = Swal.resumeTimer;
-                                    }
-                                    });
-                                    Toast.fire({
-                                    icon: "error",
-                                    title: response.msg
-                                    });
+                                },
+                                error: function(){
+                                    Swal.fire("Error", "Hubo un problema en el servidor", "error");
                                 }
-                            },
-                            error: function(){
-                                Swal.fire("Error", "Hubo un problema en el servidor", "error");
-                            }
-                        });
+                            });
+                        }
+                    });
+                }
+                
+                if (status == "OCUPADO") {
+                    Swal.fire({
+                        title: `Habitación ${numero} (${type})`,
+                        text: `Estado actual: ${status}`,
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Ver detalle",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '/habitacion/' + id + '/buscar-transaccion',
+                                type: "GET",
+                                data: {
+                                    id: id,
+                                    status: status,
+                                    _token: "{{ csrf_token() }}"
+                                },
+                                success: function(response){
+                                    // Redirige a la vista detalle de transacción
+                                    window.location.href = '/transaccion/' + response.transaccion_id + '/detalle';
+                                },
+                                error: function(){
+                                    Swal.fire("Error", "Hubo un problema en el servidor", "error");
+                                }
+                            });
+                        }
+                    });
+                }  
+            }
+            else
+            {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
                     }
+                    });
+                    Toast.fire({
+                    icon: "warning",
+                    title: "Debe aperturar caja"
                 });
             }
-            
-            if (status == "OCUPADO") {
-                Swal.fire({
-                    title: `Habitación ${numero} (${type})`,
-                    text: `Estado actual: ${status}`,
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonText: "Ver detalle",
-                    cancelButtonText: "Cancelar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '/habitacion/' + id + '/buscar-transaccion',
-                            type: "GET",
-                            data: {
-                                id: id,
-                                status: status,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response){
-                                // Redirige a la vista detalle de transacción
-                                window.location.href = '/transaccion/' + response.transaccion_id + '/detalle';
-                            },
-                            error: function(){
-                                Swal.fire("Error", "Hubo un problema en el servidor", "error");
-                            }
-                        });
-                    }
-                });
-            }  
         });
     });
 </script>
@@ -222,9 +245,11 @@
             $cant_per = $('#roomCantPer').val();
             $precio = $('#roomPrice').val();
             $cant_noches = $('#roomCant').val();
-            $estado_pago = $('#estadoPago').val();
+            $estado_pago = $('#estado_pago').val();
+            $pay_method_id = $('#pay_method_id').val();
             $fecha_salida = $('#fechaSalida').val();
             $hora_salida = $('#horaSalida').val();
+            $boxe_opening_id = $('#boxe_opening_id').val();
       
 
             $.ajax({
@@ -240,8 +265,10 @@
                     precio: $precio,
                     cant_noches: $cant_noches,
                     estado_pago: $estado_pago,
+                    pay_method_id: $pay_method_id,
                     fecha_salida: $fecha_salida,
                     hora_salida: $hora_salida,
+                    boxe_opening_id: $boxe_opening_id,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response){

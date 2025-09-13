@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="wrapper">
+<div class="wrapper sidebar_minimize">
     @include('utils.menu')
 
     <div class="main-panel">

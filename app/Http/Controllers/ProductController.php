@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeOpening;
+use App\Models\IgvType;
 use App\Models\Product;
 use App\Models\Taxonomy;
 use App\Models\Unit;
@@ -12,8 +14,9 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
 
-        return view('products.index', compact('products'));
+        return view('products.index', compact('products','caja_abierta'));
     }
 
     public function list()
@@ -26,10 +29,14 @@ class ProductController extends Controller
     {
         $categorias = Taxonomy::select('id', 'name')->get();
         $unidades = Unit::select('id', 'name')->get();
+        $igv = IgvType::select('id', 'name')->get();
+
+       
 
         return response()->json([
             'categorias' => $categorias,
             'unidades' => $unidades,
+            'igv' =>$igv,
         ]);
     }
 
@@ -44,6 +51,8 @@ class ProductController extends Controller
                 'price' => 'required|numeric|min:0',
                 'stock' => 'required|integer|min:0',
                 'image' => 'nullable|mimes:jpg,jpeg,png|max:2048',
+                'igv_type_id' => 'required|exists:igv_types,id',
+                'price_compra' => 'required|numeric|min:0',
             ]);
 
             if ($request->hasFile('image')) {
@@ -73,6 +82,7 @@ class ProductController extends Controller
             $product = Product::findOrFail($request->id);
             $categorias = Taxonomy::select('id', 'name')->get();
             $unidades = Unit::select('id', 'name')->get();
+            $igv = IgvType::select('id', 'name')->get();
 
             if ($product) {
                 $product->image = str_replace('\\', '/', $product->image);
@@ -81,7 +91,8 @@ class ProductController extends Controller
                     'msg' => 'Producto encontrado.',
                     'product' => $product,
                     'categorias' => $categorias,
-                    'unidades' => $unidades
+                    'unidades' => $unidades,
+                    'igv' => $igv
                 ]);
             }
             else {
@@ -112,6 +123,7 @@ class ProductController extends Controller
                 'price' => 'required|numeric|min:0',
                 'stock' => 'required|integer|min:0',
                 'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'price_compra' => 'required|numeric|min:0',
             ]);
 
             // Actualizar campos
@@ -121,6 +133,8 @@ class ProductController extends Controller
             $product->description = $request->description;
             $product->price = $request->price;
             $product->stock = $request->stock;
+            $product->igv_type_id = $request->igv_type_id;
+            $product->price_compra = $request->price_compra;
 
             // Subir nueva imagen si existe
             if ($request->hasFile('image')) {

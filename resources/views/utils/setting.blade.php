@@ -192,3 +192,42 @@
     </div>
 </div>
 <!-- End Custom template -->
+
+@include('utils.apertura')
+@include('boxes.closure')
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#btnApertura").on("click", function () {
+        // AJAX para traer cajas
+            $.ajax({
+                url: "{{ route('opening.form.data') }}", // <-- crea esta ruta en Laravel
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                // Limpiar selects
+                $("#boxe_id").empty();
+                console.log(response);
+
+                // Llenar cajas
+                if (response.cajas && response.cajas.length > 0) {
+                    $.each(response.cajas, function (i, caja) {
+                    $("#boxe_id").append('<option value="' + caja.id + '">' + caja.name + '</option>');
+                    });
+                } else {
+                    $("#boxe_id").append('<option value="">Sin cajas</option>');
+                }                
+
+                // Mostrar modal SOLO cuando ya tenemos los datos
+                $('#createApertura').modal('show');
+                },
+                error: function () {
+                alert("Error al cargar datos del formulario.");
+                }
+            });
+        });
+  });
+</script>

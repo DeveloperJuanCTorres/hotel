@@ -42,4 +42,9 @@ class User extends \TCG\Voyager\Models\User
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function opening()
+    {
+        return $this->hasMany(BoxeOpening::class, "user_id", "id");
+    }
 }

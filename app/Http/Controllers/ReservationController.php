@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeOpening;
 use App\Models\Contact;
 use App\Models\Reservation;
 use App\Models\Room;
@@ -12,8 +13,9 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::all();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
 
-        return view('reservations.index', compact('reservations'));
+        return view('reservations.index', compact('reservations','caja_abierta'));
     }
 
     public function list()
