@@ -19,4 +19,5 @@ class PayMethod extends Model
     {
         return $this->hasMany(Expense::class, "categorie_expense_id", "id");
     }
+    
 }
