@@ -129,7 +129,7 @@
                         <span class="sub-item">Apertura caja</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('closures*') ? 'active' : '' }}">
+                    <!-- <li class="{{ request()->is('closures*') ? 'active' : '' }}">
                         <a href="/summaries">
                         <span class="sub-item">Cierre caja</span>
                         </a>
@@ -138,7 +138,7 @@
                         <a href="/suppliers">
                         <span class="sub-item">Resumen liquidación</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </li>
