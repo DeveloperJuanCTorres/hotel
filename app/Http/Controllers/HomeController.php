@@ -37,6 +37,7 @@ class HomeController extends Controller
         $caja_abierta = BoxeOpening::where('status','abierta')->first();
         $clientes = Contact::where('type','CLIENTE')->count();
         $productos = Product::count();
+        $movimientos = BoxeMovement::orderBy('date', 'desc')->get();
         $ingresos = BoxeMovement::where('type', 'ingreso')
             ->whereDate('date', $hoy)
             ->sum('amount');
@@ -61,7 +62,7 @@ class HomeController extends Controller
         });       
         
         
-        return view('dashboard',compact('caja_abierta','clientes','productos','ingresos','egresos', 'ingresosMensuales'));
+        return view('dashboard',compact('caja_abierta','clientes','productos','ingresos','egresos', 'ingresosMensuales', 'movimientos'));
     }
 
     public function room()

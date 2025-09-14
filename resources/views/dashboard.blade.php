@@ -231,124 +231,40 @@
                         </div>
                     </div>
                     </div>
-                    <div class="card-body p-0">
+                    <div class="card-body">
                     <div class="table-responsive">
                         <!-- Projects table -->
-                        <table class="table align-items-center mb-0">
+                        <table class="table align-items-center mb-0" id="basic-datatables">
                         <thead class="thead-light">
                             <tr>
-                            <th scope="col">Payment Number</th>
-                            <th scope="col" class="text-end">Date & Time</th>
-                            <th scope="col" class="text-end">Amount</th>
-                            <th scope="col" class="text-end">Status</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col" class="text-end">Fecha</th>
+                            <th scope="col" class="text-end">Caja</th>
+                            <th scope="col" class="text-end">Método</th>
+                            <th scope="col" class="text-end">Monto</th>
+                            <th scope="col" class="text-end">Estado</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($movimientos as $mov)
                             <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
+                                <th>
+                                    <button
+                                    class="btn btn-icon btn-round btn-success btn-sm me-2"
+                                    >
+                                    <i class="fa fa-check"></i>
+                                    </button>
+                                    {{$mov->type}}
+                                </th>
+                                <td class="text-end">{{$mov->date}}</td>
+                                <td class="text-end">{{$mov->boxe_opening_id}}</td>
+                                <td class="text-end">{{$mov->paymethod->name ?? 'Sin método' }}</td>
+                                <td class="text-end">S/. {{ number_format($mov->amount, 2) }}</td>
+                                <td class="text-end">
+                                    <span class="badge badge-success">Completed</span>
+                                </td>
                             </tr>
-                            <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
-                            </tr>
-                            <tr>
-                            <th scope="row">
-                                <button
-                                class="btn btn-icon btn-round btn-success btn-sm me-2"
-                                >
-                                <i class="fa fa-check"></i>
-                                </button>
-                                Payment from #10231
-                            </th>
-                            <td class="text-end">Mar 19, 2020, 2.45pm</td>
-                            <td class="text-end">$250.00</td>
-                            <td class="text-end">
-                                <span class="badge badge-success">Completed</span>
-                            </td>
-                            </tr>
+                            @endforeach                            
                         </tbody>
                         </table>
                     </div>
@@ -366,6 +282,17 @@
 </div>
 
 <script src="{{asset('assets/js/plugin/chart.js/chart.min.js')}}"></script>
+<script>
+    $(document).ready(function () {
+        $("#basic-datatables").DataTable({
+            order: [[1, 'desc']],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
+            }
+        });
+    
+    });
+</script>
 <script>
     const ingresosData = @json($ingresosMensuales);
 

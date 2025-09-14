@@ -18,4 +18,9 @@ class BoxeMovement extends Model
         'date',
         'pay_method_id'
     ];
+
+    public function paymethod()
+    {
+        return $this->belongsTo(PayMethod::class, 'pay_method_id', 'id');
+    }
 }
