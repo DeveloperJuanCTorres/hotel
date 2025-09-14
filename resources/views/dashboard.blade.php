@@ -40,7 +40,7 @@
                             <div class="col col-stats ms-3 ms-sm-0">
                             <div class="numbers">
                                 <p class="card-category">Huespedes</p>
-                                <h4 class="card-title">3</h4>
+                                <h4 class="card-title">{{$clientes}}</h4>
                             </div>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                             <div class="col col-stats ms-3 ms-sm-0">
                             <div class="numbers">
                                 <p class="card-category">Productos</p>
-                                <h4 class="card-title">5</h4>
+                                <h4 class="card-title">{{$productos}}</h4>
                             </div>
                             </div>
                         </div>
@@ -81,8 +81,8 @@
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                             <div class="numbers">
-                                <p class="card-category">Ventas</p>
-                                <h4 class="card-title">S/. 1,345</h4>
+                                <p class="card-category">Ingresos</p>
+                                <h4 class="card-title">S/. {{$ingresos}}</h4>
                             </div>
                             </div>
                         </div>
@@ -102,8 +102,8 @@
                             </div>
                             <div class="col col-stats ms-3 ms-sm-0">
                             <div class="numbers">
-                                <p class="card-category">Por cobrar</p>
-                                <h4 class="card-title">S/. 576</h4>
+                                <p class="card-category">Egresos</p>
+                                <h4 class="card-title">S/. {{$egresos}}</h4>
                             </div>
                             </div>
                         </div>
@@ -137,14 +137,14 @@
                         </div>
                         </div>
                         <div class="card-body">
-                        <div class="chart-container" style="min-height: 375px">
-                            <canvas id="statisticsChart"></canvas>
-                        </div>
-                        <div id="myChartLegend"></div>
+                            <div >
+                                <canvas class="chart-container" id="statisticsChart"></canvas>
+                            </div>
+                            <div id="myChartLegend"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <div class="card card-primary card-round">
                         <div class="card-header">
                             <div class="card-head-row">
@@ -197,7 +197,7 @@
                         </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -364,4 +364,89 @@
 
     @include('utils.setting')
 </div>
+
+<script src="{{asset('assets/js/plugin/chart.js/chart.min.js')}}"></script>
+<script>
+    const ingresosData = @json($ingresosMensuales);
+
+    const labels = ingresosData.map(item => 
+        new Date(0, item.mes - 1).toLocaleString('es', { month: 'short' })
+    );
+
+    const data = ingresosData.map(item => item.total);
+  
+    const ctx = document.getElementById('statisticsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Ingresos mensuales',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true, 
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                bodySpacing: 4,
+                mode:"nearest",
+                intersect: 0,
+                position:"nearest",
+                xPadding:10,
+                yPadding:10,
+                caretPadding:10
+            },
+            layout:{
+                padding:{left:5,right:5,top:15,bottom:15}
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontStyle: "500",
+                        beginAtZero: false,
+                        maxTicksLimit: 5,
+                        padding: 10
+                    },
+                    gridLines: {
+                        drawTicks: false,
+                        display: false
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        zeroLineColor: "transparent"
+                    },
+                    ticks: {
+                        padding: 10,
+                        fontStyle: "500"
+                    }
+                }]
+            }, 
+            legendCallback: function(chart) { 
+                var text = []; 
+                text.push('<ul class="' + chart.id + '-legend html-legend">'); 
+                for (var i = 0; i < chart.data.datasets.length; i++) { 
+                    text.push('<li><span style="background-color:' + chart.data.datasets[i].legendColor + '"></span>'); 
+                    if (chart.data.datasets[i].label) { 
+                        text.push(chart.data.datasets[i].label); 
+                    } 
+                    text.push('</li>'); 
+                } 
+                text.push('</ul>'); 
+                return text.join(''); 
+            }
+
+            
+        }
+    });
+</script>
+
 @endsection

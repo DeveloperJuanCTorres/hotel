@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BoxeMovement;
 use App\Models\BoxeOpening;
 use App\Models\Contact;
 use App\Models\PayMethod;
+use App\Models\Product;
 use App\Models\Room;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -30,9 +32,36 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $hoy = now()->toDateString();
+
         $caja_abierta = BoxeOpening::where('status','abierta')->first();
+        $clientes = Contact::where('type','CLIENTE')->count();
+        $productos = Product::count();
+        $ingresos = BoxeMovement::where('type', 'ingreso')
+            ->whereDate('date', $hoy)
+            ->sum('amount');
+        $egresos = BoxeMovement::where('type', 'egreso')
+            ->whereDate('date', $hoy)
+            ->sum('amount');
         
-        return view('dashboard',compact('caja_abierta'));
+         // --- Ingresos reales por mes del año actual ---
+        $ingresosBD = BoxeMovement::selectRaw('MONTH(date) as mes, SUM(amount) as total')
+            ->where('type', 'ingreso')
+            ->whereYear('date', now()->year)
+            ->groupByRaw('MONTH(date)')
+            ->pluck('total','mes'); 
+            // Esto devuelve: [1 => 1500, 3 => 200, ...]
+
+        // --- Llenamos los 12 meses con 0 si no existen ---
+        $ingresosMensuales = collect(range(1,12))->map(function($mes) use ($ingresosBD) {
+            return [
+                'mes' => $mes,
+                'total' => (float) ($ingresosBD[$mes] ?? 0)
+            ];
+        });       
+        
+        
+        return view('dashboard',compact('caja_abierta','clientes','productos','ingresos','egresos', 'ingresosMensuales'));
     }
 
     public function room()

@@ -48,7 +48,7 @@
                 aria-expanded="false"
                 >
                 <i class="fa fa-bell"></i>
-                <span class="notification">4</span>
+                <span class="notification">0</span>
                 </a>
                 <ul
                 class="dropdown-menu notif-box animated fadeIn"
@@ -56,10 +56,10 @@
                 >
                 <li>
                     <div class="dropdown-title">
-                    You have 4 new notification
+                    No tiene notificaciones
                     </div>
                 </li>
-                <li>
+                <!-- <li>
                     <div class="notif-scroll scrollbar-outer">
                     <div class="notif-center">
                         <a href="#">
@@ -112,7 +112,7 @@
                     <a class="see-all" href="javascript:void(0);"
                     >See all notifications<i class="fa fa-angle-right"></i>
                     </a>
-                </li>
+                </li> -->
                 </ul>
             </li>
             <li class="nav-item topbar-icon dropdown hidden-caret">
@@ -225,29 +225,27 @@
                         />
                         </div>
                         <div class="u-text">
-                        <h4>Hizrian</h4>
-                        <p class="text-muted">hello@example.com</p>
+                        <h4>{{Auth()->user()->name}}</h4>
+                        <p class="text-muted">{{Auth()->user()->email}}</p>
                         <a
                             href="profile.html"
                             class="btn btn-xs btn-secondary btn-sm"
-                            >View Profile</a
+                            >Ver perfil</a
                         >
                         </div>
                     </div>
                     </li>
                     <li>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">My Profile</a>
-                    <a class="dropdown-item" href="#">My Balance</a>
-                    <a class="dropdown-item" href="#">Inbox</a>
+                    <a class="dropdown-item" href="#">Mi perfil</a>
+                    <a class="dropdown-item" href="#">Mi balance</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Account Setting</a>
+                    <a class="dropdown-item" href="#">Configuración</a>
                     <div class="dropdown-divider"></div>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button class="dropdown-item" type="submit">Cerrar sesión</button>
                     </form>
-                    <!-- <a class="dropdown-item" href="#">Cerrar sesión</a> -->
                     </li>
                 </div>
                 </ul>
