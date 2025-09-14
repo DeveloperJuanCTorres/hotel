@@ -97,4 +97,5 @@ return [
     // 👇 agrega estas claves nuevas:
     'users'     => 'Usuarios',
     'user'      => 'Usuario',
+    'browse_admin' => 'Explorar Administracion'
 ];
