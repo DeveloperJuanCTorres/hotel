@@ -162,9 +162,9 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-center align-items-center px-4 py-4">
-                            <button class="btn btn-info mx-2 btn-print" data-type="ticket">
+                            <!-- <button class="btn btn-info mx-2 btn-print" data-type="ticket">
                                 <i class="fa fa-print px-2"></i>Imprimir Ticket
-                            </button>
+                            </button> -->
                             <button class="btn btn-warning mx-2 text-white btn-print" data-type="boleta">
                                 <i class="fa fa-print px-2"></i>Imprimir Boleta
                             </button>
