@@ -17,4 +17,9 @@ class DetailPurchase extends Model
         'precio_unitario',
         'subtotal'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

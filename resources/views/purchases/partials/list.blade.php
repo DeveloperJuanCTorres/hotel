@@ -17,13 +17,12 @@
                         </a>
                     </li> -->
                     <li>
-                        <a class="dropdown-item client-edit" href="javascript:void(0);"
-                            data-id="{{ $purchase->id }}">
+                        <a class="dropdown-item" href="{{ route('purchases.edit', $purchase->id) }}">
                             <i class="bi bi-pencil-square me-2"></i> Editar
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item client-eliminar" href="javascript:void(0);"
+                        <a class="dropdown-item purchase-eliminar" href="javascript:void(0);"
                             data-id="{{ $purchase->id }}"
                             data-name="{{ $purchase->referencia }}">
                             <i class="bi bi-pencil-square me-2"></i> Eliminar

@@ -46,7 +46,7 @@
                     <a href="/purchases/create" class="btn btn-primary"><i class="fas fa-plus px-2"></i>Agregar</a>
                   </div>
                   <div class="card-body">
-                    <div class="table-responsive" id="clients-container">
+                    <div class="table-responsive" id="purchases-container">
                       <table
                         id="basic-datatables"
                         class="display table table-striped table-hover"
@@ -115,16 +115,16 @@
         );
     }
 
-    function loadClients() {
+    function loadPuchases() {
         showLoader();
         $.ajax({
-            url: "{{ route('clients.list') }}",
+            url: "{{ route('purchases.list') }}",
             type: "GET",
             success: function(data) {
-                $("#clients-container tbody").html(data);
+                $("#purchases-container tbody").html(data);
             },
             error: function() {
-                console.error("Error al cargar los clientes");
+                console.error("Error al cargar las compras");
             },
             complete: function() {
                 hideLoader();
@@ -138,108 +138,15 @@
 
 <script>
     $(document).ready(function(){
-        $(document).on("click", ".client-edit", function(e){
-            e.preventDefault();
-
-            let id     = $(this).data("id");
-
-            $.ajax({
-                url: "{{ route('clients.edit') }}",
-                type: "POST",
-                data: {
-                    id: id,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(response){
-                    if(response.status){
-                        $('#edit_id').val(response.contact.id);
-                        $('#edit_tipo_doc').val(response.contact.tipo_doc);
-                        $('#edit_numero_doc').val(response.contact.numero_doc);
-                        $('#edit_name').val(response.contact.name);
-                        $('#edit_address').val(response.contact.address);
-                        $('#edit_email').val(response.contact.email);
-                        $('#edit_phone').val(response.contact.phone);
-                        
-                        $('#editClient').modal('show');
-                    } else {
-                        const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                        });
-                        Toast.fire({
-                        icon: "error",
-                        title: response.msg
-                        });
-                    }
-                },
-                error: function(){
-                    Swal.fire("Error", "Hubo un problema en el servidor", "error");
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    $(document).on("submit", "#formEditClient", function(e){
-        e.preventDefault();
-
-        let formData = new FormData(this);
-
-        $.ajax({
-            url: "{{ route('clients.update') }}",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response){
-                if(response.status){
-                    $('#editClient').modal('hide');
-                    loadClients(); 
-                    const Toast = Swal.mixin({
-                            toast: true,
-                            position: "top-end",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            didOpen: (toast) => {
-                                toast.onmouseenter = Swal.stopTimer;
-                                toast.onmouseleave = Swal.resumeTimer;
-                            }
-                            });
-                            Toast.fire({
-                            icon: "success",
-                            title: response.msg
-                        });
-                } else {
-                    Swal.fire("Error", response.msg, "error");
-                }
-            },
-            error: function(response){
-                Swal.fire("Error", "Hubo un problema en el servidor", "error");
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function(){
-        $(document).on("click", ".client-eliminar", function(e){
+        $(document).on("click", ".purchase-eliminar", function(e){
             e.preventDefault();
 
             let id     = $(this).data("id");
             let name     = $(this).data("name");
 
             Swal.fire({
-                title: "Eliminacion de cliente",
-                text: "Estás seguro de eliminar el cliente: " + name + "?",
+                title: "Eliminacion de compra",
+                text: "Estás seguro de eliminar la compra: " + name + "?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -249,7 +156,7 @@
                 }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ route('clients.delet') }}",
+                        url: "{{ route('purchases.delet') }}",
                         type: "POST",
                         data: {
                             id: id,
@@ -272,7 +179,7 @@
                                 icon: "success",
                                 title: response.msg
                                 });
-                                loadClients(); 
+                                loadPuchases(); 
                             } else {
                                 const Toast = Swal.mixin({
                                 toast: true,

@@ -108,8 +108,13 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/sale/store', [SalesController::class, 'store'])->name('sales.store');
 
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
+    Route::get('/purchases/list', [PurchaseController::class, 'list'])->name('purchases.list');
     Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
     Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
+    Route::post('/purchases/delet', [PurchaseController::class, 'destroy'])->name('purchases.delet');
+    Route::get('/purchases/{id}/edit', [PurchaseController::class, 'edit'])->name('purchases.edit');
+    Route::post('/purchases/{id}/update', [PurchaseController::class, 'update'])->name('purchases.update');
+
 
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
 

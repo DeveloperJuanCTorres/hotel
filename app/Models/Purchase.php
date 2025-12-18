@@ -24,4 +24,9 @@ class Purchase extends Model
     {
         return $this->belongsTo(PayMethod::class, 'pay_method_id', 'id');
     }
+
+    public function details()
+    {
+        return $this->hasMany(DetailPurchase::class, 'purchase_id');
+    }
 }

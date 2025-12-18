@@ -36,4 +36,9 @@ class Product extends Model
     {
         return $this->belongsTo(IgvType::class);
     }
+
+    public function purchaseDetails()
+    {
+        return $this->hasMany(DetailPurchase::class, 'product_id');
+    }
 }
