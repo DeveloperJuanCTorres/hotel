@@ -110,7 +110,7 @@
     <br>
 
     <div class="center">
-        ¡Gracias por su preferencia!..
+        ¡Gracias por su preferencia!
     </div>
 
 </body>
