@@ -248,7 +248,7 @@
 
         // 🔹 SOLO limpiar si NO viene de reserva
         if (fromReservation == 0) {
-            $('#tipo_doc').val('DNI').trigger('change');
+            // $('#tipo_doc').val('DNI').trigger('change');
             $('#numero_doc').val('');
             $('#cliente').val('');
             $('#direccion').val('');
