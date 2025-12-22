@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Reservation;
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -94,6 +95,10 @@ class ReservationController extends Controller
             $reservation = Reservation::findOrFail($request->id);
             $reservation->delete();
 
+            $room = Room::findOrFail($reservation->room_id);
+            $room->status = "DISPONIBLE";
+            $room->save();
+
             return response()->json([
                 'status' => true,
                 'msg' => 'Reservación eliminado correctamente.'
@@ -105,5 +110,47 @@ class ReservationController extends Controller
                 'msg' => $th->getMessage()
             ]);
         }
+    }
+
+    public function getByRoom($room_id)
+    {
+        $room = Room::findOrFail($room_id);
+
+        if ($room->status !== 'RESERVADO') {
+            return response()->json([
+                'status' => false,
+                'msg' => 'La habitación no está reservada'
+            ]);
+        }
+        
+        $reservation = Reservation::with('contact')
+            ->where('room_id', $room_id)
+            ->latest()
+            ->first();
+
+        if (!$reservation) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'No existe reserva activa'
+            ]);
+        }
+
+        $noches = Carbon::parse($reservation->fecha_inicio)
+            ->diffInDays(Carbon::parse($reservation->fecha_fin));
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'reservation_id' => $reservation->id,
+                'contact' => $reservation->contact,
+                'fecha_inicio' => $reservation->fecha_inicio,
+                'hora_inicio' => $reservation->hora_inicio,
+                'fecha_fin' => $reservation->fecha_fin,
+                'hora_fin' => $reservation->hora_fin,
+                'noches' => $noches,
+                'total' => $reservation->total,
+                'saldo' => $reservation->saldo
+            ]
+        ]);
     }
 }

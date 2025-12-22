@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/reservations/update', [ReservationController::class, 'update'])->name('reservations.update');
     Route::post('/reservations/delet', [ReservationController::class, 'destroy'])->name('reservations.delet');
     Route::post('/reservations/disponibles', [ReservationController::class, 'getDisponibles']);
+    Route::get('/habitacion/{room}/reserva', [ReservationController::class, 'getByRoom']);
 
     Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses');
     Route::get('/expenses/list', [ExpenseController::class, 'list'])->name('expenses.list');

@@ -114,6 +114,8 @@
                     $('#roomId').val(id);
                     
                     // abrir modal
+                    $('#fromReservation').val(0);
+                    $('#reservation_id').val('');
                     $('#roomModal').modal('show');
                     // alert("test.");
                 }
@@ -209,6 +211,67 @@
                         }
                     });
                 }  
+
+                if (status == "RESERVADO") {
+                    Swal.fire({
+                        title: `Habitación ${numero} (${type})`,
+                        text: "Esta habitación tiene una reserva",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "Realizar Check-in",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+
+                        if (!result.isConfirmed) return;
+
+                        $.ajax({
+                            url: '/habitacion/' + id + '/reserva',
+                            type: 'GET',
+                            success: function(res) {
+
+                                if (!res.status) {
+                                    Swal.fire("Error", res.msg, "error");
+                                    return;
+                                }
+
+                                let r = res.data;
+                                let c = r.contact;
+
+                                $('#fromReservation').val(1);
+                                $('#reservation_id').val(r.reservation_id);
+                               
+                                // Datos habitación
+                                $('#roomId').val(id);
+                                $('#roomNumero').text(numero);
+                                $('#roomType').text(type);
+                                $('#roomStatus').text(status);
+                                $('#roomDescription').text(description);
+                                $('#roomPrice').val(price);
+
+                                // Datos cliente
+                                $('#cliente').val(c.name);
+                                $('#tipo_doc').val(c.tipo_doc);
+                                $('#numero_doc').val(c.numero_doc);
+                                $('#direccion').val(c.address);
+
+                                // Datos reserva
+                                $('#roomCant').val(r.noches);
+                                // $('#roomPrice').val(r.total);
+                                $('#fechaSalida').val(r.fecha_fin);
+                                $('#horaSalida').val(r.hora_fin);
+
+                                // Guardar ID reserva
+                                $('#reservation_id').val(r.reservation_id);
+                                console.log(c);
+
+                                $('#roomModal').modal('show');
+                            },
+                            error: function() {
+                                Swal.fire("Error", "Error en el servidor", "error");
+                            }
+                        });
+                    });
+                }
             }
             else
             {
@@ -237,6 +300,8 @@
         $(document).on("click", ".registrar", function(e){
             e.preventDefault();
 
+            $reservation_id = $('#reservation_id').val();
+
             $id = $('#roomId').val();
             $tipo_doc = $('#tipo_doc').val();
             $numero_doc = $('#numero_doc').val();
@@ -257,6 +322,7 @@
                 type: "POST",
                 data: {
                     id: $id,
+                    reservation_id: $reservation_id,
                     tipo_doc: $tipo_doc,
                     numero_doc: $numero_doc,
                     cliente: $cliente,

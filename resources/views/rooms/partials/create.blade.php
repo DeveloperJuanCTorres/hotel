@@ -24,6 +24,10 @@
                 <p><strong>Estado:</strong> <span class="badge badge-primary" id="roomStatus"></span></p>
             </div>
         </div>  
+
+        <input type="hidden" id="fromReservation" value="0">
+        <input type="hidden" id="reservation_id">
+
         <hr>
         <div class="row">
             <div class="col-md-6 col-12">
@@ -240,13 +244,19 @@
 
     // Al abrir el modal -> recalcular
     document.getElementById('roomModal').addEventListener('shown.bs.modal', function () {
-        $('#tipo_doc').val('DNI');
-        $('#numero_doc').val('');
-        $('#cliente').val('');
-        $('#direccion').val('');
+        let fromReservation = $('#fromReservation').val();
+
+        // 🔹 SOLO limpiar si NO viene de reserva
+        if (fromReservation == 0) {
+            $('#tipo_doc').val('DNI').trigger('change');
+            $('#numero_doc').val('');
+            $('#cliente').val('');
+            $('#direccion').val('');
+        }
+
         $('#roomCantPer').val('1');
         $('#roomCant').val('1');
-        $('#estadoPago').val('0');
+        $('#estado_pago').val('0');
         $('#horaSalida').val('12:00');
 
         calcularTotal();

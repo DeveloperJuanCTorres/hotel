@@ -7,11 +7,13 @@ use App\Models\BoxeOpening;
 use App\Models\Contact;
 use App\Models\PayMethod;
 use App\Models\Product;
+use App\Models\Reservation;
 use App\Models\Room;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -117,57 +119,126 @@ class HomeController extends Controller
         return view('rooms.partials.list', compact('rooms'));
     }
 
+    // public function roomRegister(Request $request)
+    // {
+    //     try {
+    //         $cliente = Contact::where('numero_doc', $request->numero_doc)->first();
+    //         if ($cliente == null) {
+    //             $contact = new Contact();
+    //             $contact->tipo_doc = $request->tipo_doc;
+    //             $contact->numero_doc = $request->numero_doc;
+    //             $contact->name = $request->cliente;
+    //             $contact->address = $request->direccion;
+    //             $contact->type = 'CLIENTE';
+    //             $contact->save();
+    //             $huesped = $contact;
+    //         }
+    //         else{
+    //             $huesped = $cliente;
+    //         }
+
+    //         $transaction = new Transaction();
+    //         $transaction->room_id = $request->id;
+    //         $transaction->contact_id = $huesped->id;
+    //         $transaction->cant_personas = $request->cant_per;
+    //         $transaction->precio_unitario = $request->precio;
+    //         $transaction->cant_noches = $request->cant_noches;
+    //         $transaction->total = $request->precio * $request->cant_noches;
+    //         $transaction->estado_pago = $request->estado_pago;
+    //         $transaction->pay_method_id = $request->pay_method_id;
+    //         $transaction->fecha_entrada = Carbon::now();
+    //         $transaction->fecha_salida = $request->fecha_salida;
+    //         $transaction->hora_salida = $request->hora_salida;
+    //         $transaction->status = 0;
+    //         $transaction->boxe_opening_id = $request->boxe_opening_id;
+    //         $transaction->save();
+
+    //         $transaction->ref_nro = "TR-" . $transaction->id;
+    //         $transaction->save();
+
+    //         if ($request->filled('reservation_id')) {
+    //             Reservation::where('id', $request->reservation_id)->delete();
+    //         }
+
+    //         $room = Room::findOrFail($request->id);
+    //         $room->status = "OCUPADO";
+    //         $room->save();
+    //         return response()->json([
+    //             'status' => true,
+    //             'msg' => 'El huesped: ' . $request->cliente . ' se alojo exitosamente.'
+    //         ]);         
+            
+    //         } catch (\Throwable $th) {
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'msg' => $th->getMessage()
+    //             ]);
+    //     }        
+    // }
+
     public function roomRegister(Request $request)
     {
+        DB::beginTransaction();
+
         try {
+            // 👤 Cliente
             $cliente = Contact::where('numero_doc', $request->numero_doc)->first();
-            if ($cliente == null) {
-                $contact = new Contact();
-                $contact->tipo_doc = $request->tipo_doc;
-                $contact->numero_doc = $request->numero_doc;
-                $contact->name = $request->cliente;
-                $contact->address = $request->direccion;
-                $contact->type = 'CLIENTE';
-                $contact->save();
-                $huesped = $contact;
-            }
-            else{
-                $huesped = $cliente;
+            if (!$cliente) {
+                $cliente = Contact::create([
+                    'tipo_doc' => $request->tipo_doc,
+                    'numero_doc' => $request->numero_doc,
+                    'name' => $request->cliente,
+                    'address' => $request->direccion,
+                    'type' => 'CLIENTE',
+                ]);
             }
 
-            $transaction = new Transaction();
-            $transaction->room_id = $request->id;
-            $transaction->contact_id = $huesped->id;
-            $transaction->cant_personas = $request->cant_per;
-            $transaction->precio_unitario = $request->precio;
-            $transaction->cant_noches = $request->cant_noches;
-            $transaction->total = $request->precio * $request->cant_noches;
-            $transaction->estado_pago = $request->estado_pago;
-            $transaction->pay_method_id = $request->pay_method_id;
-            $transaction->fecha_entrada = Carbon::now();
-            $transaction->fecha_salida = $request->fecha_salida;
-            $transaction->hora_salida = $request->hora_salida;
-            $transaction->status = 0;
-            $transaction->boxe_opening_id = $request->boxe_opening_id;
-            $transaction->save();
+            // 💰 Transacción
+            $transaction = Transaction::create([
+                'room_id' => $request->id,
+                'contact_id' => $cliente->id,
+                'cant_personas' => $request->cant_per,
+                'precio_unitario' => $request->precio,
+                'cant_noches' => $request->cant_noches,
+                'total' => $request->precio * $request->cant_noches,
+                'estado_pago' => $request->estado_pago,
+                'pay_method_id' => $request->pay_method_id,
+                'fecha_entrada' => now(),
+                'fecha_salida' => $request->fecha_salida,
+                'hora_salida' => $request->hora_salida,
+                'status' => 0,
+                'boxe_opening_id' => $request->boxe_opening_id
+            ]);
 
-            $transaction->ref_nro = "TR-" . $transaction->id;
-            $transaction->save();
+            $transaction->update([
+                'ref_nro' => 'TR-' . $transaction->id
+            ]);
 
-            $room = Room::findOrFail($request->id);
-            $room->status = "OCUPADO";
-            $room->save();
+            // 🟡 CERRAR RESERVA SI EXISTE
+            if ($request->filled('reservation_id')) {
+                Reservation::where('id', $request->reservation_id)->delete();
+            }
+
+            // 🏨 OCUPAR HABITACIÓN
+            Room::where('id', $request->id)->update([
+                'status' => 'OCUPADO'
+            ]);
+
+            DB::commit();
+
             return response()->json([
                 'status' => true,
-                'msg' => 'El huesped: ' . $request->cliente . ' se alojo exitosamente.'
-            ]);         
-            
-            } catch (\Throwable $th) {
-                return response()->json([
-                    'status' => false,
-                    'msg' => $th->getMessage()
-                ]);
-        }        
+                'msg' => 'El huésped se alojó exitosamente.'
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'msg' => $th->getMessage()
+            ]);
+        }
     }
 
     public function updateStatus(Request $request)
@@ -234,12 +305,20 @@ class HomeController extends Controller
 
     public function buscarTransaccion($id)
     {
-        $habitacion = Room::where('status', 'OCUPADO')->findOrFail($id);
+        // $habitacion = Room::where('status', 'OCUPADO')->findOrFail($id);
+        $habitacion = Room::where('id', $id)
+            ->where('status', 'OCUPADO')
+            ->firstOrFail();
         
 
         // Ejemplo: buscar transacción activa de esa habitación
+        // $transaccion = Transaction::where('room_id', $habitacion->id)
+        //     ->where('status', 0) // o el campo que uses
+        //     ->first();
+
         $transaccion = Transaction::where('room_id', $habitacion->id)
-            ->where('status', 0) // o el campo que uses
+            ->where('status', 0) // activa
+            ->latest('id')
             ->first();
 
         if (!$transaccion) {
@@ -252,7 +331,12 @@ class HomeController extends Controller
 
     public function detalle($id)
     {
-        $transaction = Transaction::findOrFail($id);
+        // $transaction = Transaction::findOrFail($id);
+        $transaction = Transaction::with([
+            'contact',
+            'room.type'
+        ])->findOrFail($id);
+        
         $caja_abierta = BoxeOpening::where('status','abierta')->first();
         $pay_methods = PayMethod::all();
 
