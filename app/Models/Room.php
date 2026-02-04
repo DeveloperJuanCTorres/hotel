@@ -24,4 +24,9 @@ class Room extends Model
     {
         return $this->hasMany(Reservation::class, "room_id", "id");
     }
+
+    public function activo()
+    {
+        return $this->hasMany(Activo::class, "room_id", "id");
+    }
 }

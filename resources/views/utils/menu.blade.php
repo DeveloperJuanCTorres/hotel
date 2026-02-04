@@ -163,6 +163,18 @@
                 </ul>
             </div>
         </li>
+        <li class="nav-item m-auto {{ request()->is('ventas*') ? 'active' : '' }}" style="min-height: 60px;">
+            <a href="/ventas">
+                <i class="fas fa-cart-plus" style="font-size: 25px;width: 40px;"></i>
+                <p>Ventas</p>
+            </a>
+        </li>
+        <li class="nav-item m-auto {{ request()->is('activos*') ? 'active' : '' }}" style="min-height: 60px;">
+            <a href="/activos">
+                <i class="fas fa-tv" style="font-size: 25px;width: 40px;"></i>
+                <p>Activos</p>
+            </a>
+        </li>
     </ul>
     </div>
 </div>

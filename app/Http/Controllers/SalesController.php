@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BoxeMovement;
+use App\Models\BoxeOpening;
 use App\Models\Contact;
 use App\Models\DetailSale;
 use App\Models\Product;
@@ -151,5 +152,52 @@ class SalesController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Error al registrar la venta: ' . $e->getMessage());
         }
+    }
+
+
+    public function index()
+    {
+        $contacts = Contact::orderBy('name')->get();
+        $caja_abierta = BoxeOpening::where('status','abierta')->first();
+
+        $sales = Sale::with('contact')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('ventas', compact('sales', 'contacts', 'caja_abierta'));
+    }
+
+    public function show($id)
+    {
+        $sale = Sale::with([
+            'contact',
+            'details.product'
+        ])->findOrFail($id);
+
+        return response()->json($sale);
+    }
+
+    public function search(Request $request)
+    {
+        $query = Sale::with('contact');
+
+        if ($request->from_date && $request->to_date) {
+            $query->whereBetween('transaction_date', [
+                $request->from_date,
+                $request->to_date
+            ]);
+        }
+
+        if ($request->contact_id) {
+            $query->where('contact_id', $request->contact_id);
+        }
+
+        if ($request->payment_status) {
+            $query->where('payment_status', $request->payment_status);
+        }
+
+        return response()->json(
+            $query->orderBy('transaction_date', 'desc')->get()
+        );
     }
 }

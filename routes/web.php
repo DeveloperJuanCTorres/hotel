@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivoController;
 use App\Http\Controllers\BoxeOpeningController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
@@ -108,6 +109,10 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('/sale/store', [SalesController::class, 'store'])->name('sales.store');
 
+    Route::get('/ventas', [SalesController::class, 'index'])->name('sales.index');
+    Route::get('/ventas/buscar', [SalesController::class, 'search'])->name('sales.search');
+    Route::get('/sales/{id}', [SalesController::class, 'show'])->name('sales.show');
+
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
     Route::get('/purchases/list', [PurchaseController::class, 'list'])->name('purchases.list');
     Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
@@ -115,6 +120,15 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/purchases/delet', [PurchaseController::class, 'destroy'])->name('purchases.delet');
     Route::get('/purchases/{id}/edit', [PurchaseController::class, 'edit'])->name('purchases.edit');
     Route::post('/purchases/{id}/update', [PurchaseController::class, 'update'])->name('purchases.update');
+
+
+    Route::get('/activos', [ActivoController::class, 'index'])->name('activos');
+    Route::get('/activos/list', [ActivoController::class, 'list'])->name('activos.list');
+    Route::get('/activos/form-data', [ActivoController::class, 'getFormData'])->name('activos.form.data');
+    Route::post('/activos/store', [ActivoController::class, 'store'])->name('activos.store');
+    Route::post('/activos/edit', [ActivoController::class, 'edit'])->name('activos.edit');
+    Route::post('/activos/update', [ActivoController::class, 'update'])->name('activos.update');
+    Route::post('/activos/delet', [ActivoController::class, 'destroy'])->name('activos.delet');
 
 
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
