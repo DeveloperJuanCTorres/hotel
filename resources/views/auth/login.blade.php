@@ -16,7 +16,7 @@
       <span class="state">Login</span>
     </button>
   </form>
-  <footer><a target="blank" href="http://vesergenperu.com/">Grupo VesergenPerú</a></footer>
+  <footer><a target="blank" href="https://grupotyg.pe">Grupo TyG Ingenieros</a></footer>
   </p>
 </div>
 
