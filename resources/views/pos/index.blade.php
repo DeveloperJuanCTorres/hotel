@@ -50,7 +50,7 @@
                                                 <td colspan="2" id="subtotal">0.00</td>
                                             </tr>
                                             <tr>
-                                                <td colspan="3" class="text-end"><strong>IGV (18%)</strong></td>
+                                                <td colspan="3" class="text-end"><strong>IGV (Exonerado)</strong></td>
                                                 <td colspan="2" id="igv">0.00</td>
                                             </tr>
                                             <tr>
@@ -215,8 +215,8 @@
         });
 
         // Si el precio ya incluye IGV
-        let subtotal = total / 1.18;
-        let igv = total - subtotal;
+        let subtotal = total;
+        let igv = 0.00; // IGV exonerado
 
         $("#subtotal").text(subtotal.toFixed(2));
         $("#igv").text(igv.toFixed(2));
