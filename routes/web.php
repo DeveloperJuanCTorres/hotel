@@ -94,6 +94,12 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/expenses/cat/edit', [ExpenseCategoryController::class, 'edit'])->name('expensescat.edit');
     Route::post('/expenses/cat/update', [ExpenseCategoryController::class, 'update'])->name('expensescat.update');
     Route::post('/expenses/cat/delet', [ExpenseCategoryController::class, 'destroy'])->name('expensescat.delet');
+    Route::get('/expenses/excel', [ExpenseController::class, 'exportExcel'])
+        ->name('expenses.excel');
+    Route::get('/expenses/pdf', [ExpenseController::class, 'exportPdf'])
+        ->name('expenses.pdf');
+
+
 
     Route::get('/pos', [PosController::class, 'index'])->name('pos');
 
@@ -102,6 +108,12 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/opening/view', [BoxeOpeningController::class, 'view'])->name('openings.view');
     Route::post('/opening/store', [BoxeOpeningController::class, 'store'])->name('openings.store');
     Route::get('/opening/form-data', [BoxeOpeningController::class, 'getFormData'])->name('opening.form.data');
+    Route::get('/openings/excel', [BoxeOpeningController::class, 'exportExcel'])
+        ->name('openings.excel');
+    Route::get('/openings/pdf', [BoxeOpeningController::class, 'exportPdf'])
+        ->name('openings.pdf');
+
+
 
     Route::get('/caja/{id}/preview-cierre', [BoxeOpeningController::class, 'previewCierre']);
     Route::post('/caja/{id}/cerrar', [BoxeOpeningController::class, 'cerrarCaja']);
@@ -120,6 +132,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/purchases/delet', [PurchaseController::class, 'destroy'])->name('purchases.delet');
     Route::get('/purchases/{id}/edit', [PurchaseController::class, 'edit'])->name('purchases.edit');
     Route::post('/purchases/{id}/update', [PurchaseController::class, 'update'])->name('purchases.update');
+    Route::get('/purchases/excel', [PurchaseController::class, 'exportExcel'])
+        ->name('purchases.excel');
+    Route::get('/purchases/pdf', [PurchaseController::class, 'exportPdf'])
+        ->name('purchases.pdf');
 
 
     Route::get('/activos', [ActivoController::class, 'index'])->name('activos');
@@ -132,6 +148,10 @@ Route::middleware(['auth'])->group(function(){
 
 
     Route::get('/kardex', [KardexController::class, 'index'])->name('kardex.index');
+    Route::get('/kardex/excel', [KardexController::class, 'exportExcel'])->name('kardex.excel');
+    Route::get('/kardex/pdf', [KardexController::class, 'exportPdf'])->name('kardex.pdf');
+
+
 
     Route::post('/comprobantes/generar', [MovementController::class, 'generar']);
     

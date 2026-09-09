@@ -43,7 +43,23 @@
                 <div class="card">
                   <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0">Listado</h4>
-                  </div>
+
+                    <div class="d-flex gap-2">
+
+                        <a href="{{ route('openings.excel') }}"
+                        class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </a>
+
+                        <a href="{{ route('openings.pdf') }}"
+                        class="btn btn-danger"
+                        target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+
+                    </div>
+
+                </div>
                   <div class="card-body">
                     <div class="table-responsive" id="boxes-container">
                       <table

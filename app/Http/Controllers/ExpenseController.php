@@ -9,6 +9,10 @@ use App\Models\Expense;
 use App\Models\PayMethod;
 use Illuminate\Http\Request;
 
+use App\Exports\ExpensesExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ExpenseController extends Controller
 {
     public function index()
@@ -158,5 +162,32 @@ class ExpenseController extends Controller
                 'msg' => $th->getMessage()
             ]);
         }
+    }
+
+    private function obtenerGastos()
+    {
+        return Expense::with(['catexpense','paymethod'])
+            ->orderByDesc('date')
+            ->get();
+    }
+
+    public function exportExcel()
+    {
+        $expenses = $this->obtenerGastos();
+
+        return Excel::download(
+            new ExpensesExport($expenses),
+            'Gastos.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $expenses = $this->obtenerGastos();
+
+        $pdf = Pdf::loadView('expenses.pdf', compact('expenses'))
+            ->setPaper('A4','landscape');
+
+        return $pdf->download('Gastos.pdf');
     }
 }

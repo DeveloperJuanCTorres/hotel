@@ -43,8 +43,27 @@
                 <div class="card">
                   <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0">Listado</h4>
-                    <button class="btn btn-primary" id="btnCreate"><i class="fas fa-plus px-2"></i>Agregar</button>
-                  </div>
+
+                    <div class="d-flex gap-2">
+
+                        <a href="{{ route('expenses.excel') }}"
+                        class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </a>
+
+                        <a href="{{ route('expenses.pdf') }}"
+                        class="btn btn-danger"
+                        target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+
+                        <button class="btn btn-primary" id="btnCreate">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+
+                    </div>
+
+                </div>
                   <div class="card-body">
                     <div class="table-responsive" id="expenses-container">
                       <table

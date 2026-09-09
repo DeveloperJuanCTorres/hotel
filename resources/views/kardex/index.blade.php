@@ -73,7 +73,20 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title mb-0">Resultado</h4>
+                            <div class="btn-group">
+                                <a href="{{ route('kardex.excel', request()->query()) }}"
+                                class="btn btn-success btn-sm">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </a>
+
+                                <a href="{{ route('kardex.pdf', request()->query()) }}"
+                                class="btn btn-danger btn-sm"
+                                target="_blank">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                            </div>
                         </div>
+                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle">

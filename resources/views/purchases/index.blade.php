@@ -43,8 +43,28 @@
                 <div class="card">
                   <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0">Listado</h4>
-                    <a href="/purchases/create" class="btn btn-primary"><i class="fas fa-plus px-2"></i>Agregar</a>
-                  </div>
+
+                    <div class="d-flex gap-2">
+
+                        <a href="{{ route('purchases.excel') }}"
+                        class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </a>
+
+                        <a href="{{ route('purchases.pdf') }}"
+                        class="btn btn-danger"
+                        target="_blank">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+
+                        <a href="/purchases/create"
+                        class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Agregar
+                        </a>
+
+                    </div>
+
+                </div>
                   <div class="card-body">
                     <div class="table-responsive" id="purchases-container">
                       <table

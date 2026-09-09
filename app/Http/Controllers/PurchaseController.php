@@ -13,6 +13,10 @@ use App\Models\Taxonomy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Exports\PurchasesExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+
 class PurchaseController extends Controller
 {
     public function index()
@@ -224,8 +228,6 @@ class PurchaseController extends Controller
         }
     }
 
-
-
     public function destroy(Request $request)
     {
         try {
@@ -243,5 +245,32 @@ class PurchaseController extends Controller
                 'msg' => $th->getMessage()
             ]);
         }
+    }
+
+    private function obtenerCompras()
+    {
+        return Purchase::with(['contact','payMethod'])
+            ->orderBy('date','desc')
+            ->get();
+    }
+
+    public function exportExcel()
+    {
+        $purchases = $this->obtenerCompras();
+
+        return Excel::download(
+            new PurchasesExport($purchases),
+            'Compras.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $purchases = $this->obtenerCompras();
+
+        $pdf = Pdf::loadView('purchases.pdf', compact('purchases'))
+            ->setPaper('A4','landscape');
+
+        return $pdf->download('Compras.pdf');
     }
 }

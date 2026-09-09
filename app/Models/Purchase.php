@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 class Purchase extends Model
 {
-     use HasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'contact_id',
@@ -20,11 +19,19 @@ class Purchase extends Model
         'date'
     ];
 
-    public function paymethod()
+    // Proveedor
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class, 'contact_id', 'id');
+    }
+
+    // Método de pago
+    public function payMethod()
     {
         return $this->belongsTo(PayMethod::class, 'pay_method_id', 'id');
     }
 
+    // Detalle de la compra
     public function details()
     {
         return $this->hasMany(DetailPurchase::class, 'purchase_id');

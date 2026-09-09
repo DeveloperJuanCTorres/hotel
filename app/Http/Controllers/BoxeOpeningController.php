@@ -12,6 +12,10 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Exports\BoxeOpeningExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+
 class BoxeOpeningController extends Controller
 {
     public function index()
@@ -299,5 +303,32 @@ class BoxeOpeningController extends Controller
             'closure' => $closure,
             'detalle' => $detalle,
         ]);
+    }
+
+    private function obtenerAperturas()
+    {
+        return BoxeOpening::with(['box','user'])
+            ->orderByDesc('fecha_apertura')
+            ->get();
+    }
+
+    public function exportExcel()
+    {
+        $boxes = $this->obtenerAperturas();
+
+        return Excel::download(
+            new BoxeOpeningExport($boxes),
+            'Aperturas_Caja.xlsx'
+        );
+    }
+
+    public function exportPdf()
+    {
+        $boxes = $this->obtenerAperturas();
+
+        $pdf = Pdf::loadView('boxes.pdf', compact('boxes'))
+            ->setPaper('A4','landscape');
+
+        return $pdf->download('Aperturas_Caja.pdf');
     }
 }
