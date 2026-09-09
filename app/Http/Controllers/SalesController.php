@@ -14,60 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
 {
-    // public function store(Request $request)
-    // {
-    //     $transaction_id = null;
-        
-    //     $cliente = Contact::where('numero_doc', $request->numero_doc)->first();
-    //     if (!$cliente) {
-    //         $cliente = new Contact();
-    //         $cliente->tipo_doc = $request->tipo_doc;
-    //         $cliente->numero_doc = $request->numero_doc;
-    //         $cliente->name = $request->client;
-    //         $cliente->address = $request->address;
-    //         $cliente->save();
-    //     }
-
-    //     if ($request->tipo_cliente == 1) {
-    //         $transaction_id = $request->transaction_id;
-    //     }
-        
-    //     $venta = Sale::create([
-    //         'contact_id' => $cliente->id,
-    //         'transaction_id' => $transaction_id,
-    //         'status' => 'pagado',
-    //         'total' => array_sum(array_column($request->productos, 'importe')),
-    //         'boxe_opening_id' => $request->boxe_opening_id,
-    //         'pay_method_id' => $request->tipo_comprobante
-    //     ]);
-
-        
-    //     foreach ($request->productos as $prod) {
-    //         $product = Product::find($prod['id']);
-    //         if ($product) {
-    //             $product->decrement('stock', $prod['cantidad']);
-    //         }
-    //         $product->save();
-    //         $detail = DetailSale::create([
-    //             'sale_id' => $venta->id,
-    //             'product_id' => $prod['id'],
-    //             'cantidad' => $prod['cantidad'],
-    //             'precio_unitario' => $prod['precio'],
-    //             'subtotal' => $prod['importe'],
-    //         ]);
-    //     }
-
-    //     $boxe_movement = BoxeMovement::create([
-    //         'boxe_opening_id' =>$request->boxe_opening_id,
-    //         'type' =>'ingreso',
-    //         'amount' =>$venta->total,
-    //         'date' =>now(),
-    //         'pay_metohd_id' =>$request->tipo_comprobante,
-    //     ]);
-
-    //     return redirect()->route('pos')->with('success', 'Venta registrada con éxito.');
-    // }
-
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -147,11 +94,23 @@ class SalesController extends Controller
 
             DB::commit();
 
-            return redirect()->route('pos')->with('success', 'Venta registrada con éxito.');
+            // return redirect()->route('pos')->with('success', 'Venta registrada con éxito.');
+            return redirect()->route('sales.ticket', $venta->id);
         } catch (\Throwable $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Error al registrar la venta: ' . $e->getMessage());
         }
+    }
+
+    public function ticket($id)
+    {
+        $sale = Sale::with([
+            'contact',
+            'details.product',
+            'payMethod'
+        ])->findOrFail($id);
+
+        return view('pos.ticket', compact('sale'));
     }
 
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\PayMethod;
 
 
 class Sale extends Model
@@ -28,5 +29,10 @@ class Sale extends Model
     public function details()
     {
         return $this->hasMany(DetailSale::class, 'sale_id');
+    }
+
+    public function payMethod()
+    {
+        return $this->belongsTo(PayMethod::class, 'pay_method_id');
     }
 }

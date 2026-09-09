@@ -124,6 +124,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/ventas', [SalesController::class, 'index'])->name('sales.index');
     Route::get('/ventas/buscar', [SalesController::class, 'search'])->name('sales.search');
     Route::get('/sales/{id}', [SalesController::class, 'show'])->name('sales.show');
+    Route::get('/ventas/{sale}/ticket', [SalesController::class, 'ticket'])
+        ->name('sales.ticket');
+
+
 
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
     Route::get('/purchases/list', [PurchaseController::class, 'list'])->name('purchases.list');
