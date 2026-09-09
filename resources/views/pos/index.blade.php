@@ -75,7 +75,7 @@
                                             <label for="categoria_id" class="form-label">Tipo de cliente</label>
                                             <select class="form-select form-control" name="tipo_cliente" id="tipo_cliente" required>
                                                 <option value="0">--Selecciona--</option>
-                                                <option value="1">Huesped de habitación</option>
+                                                <!-- <option value="1">Huesped de habitación</option> -->
                                                 <option value="2">Cliente final</option>
                                             </select>
                                         </div> 

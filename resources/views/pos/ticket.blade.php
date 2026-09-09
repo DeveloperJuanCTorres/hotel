@@ -120,7 +120,7 @@
     @endif
 
     @if($sale->transaction_id)
-    <div>Habitación: {{ optional($sale->transaction)->room->numero }}</div>
+    <div>Habitación: @if($sale->transaction->room->numero) {{ optional($sale->transaction)->room->numero }} @endif</div>
     @endif
 
     <div class="line"></div>
