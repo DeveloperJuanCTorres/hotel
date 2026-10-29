@@ -126,7 +126,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/sales/{id}', [SalesController::class, 'show'])->name('sales.show');
     Route::get('/ventas/{sale}/ticket', [SalesController::class, 'ticket'])
         ->name('sales.ticket');
+        
+    Route::get('/ventas/exportar/pdf',
+        [SalesController::class, 'exportPdf']
+    )->name('sales.export.pdf');
 
+    Route::get('/ventas/exportar/excel',
+        [SalesController::class, 'exportExcel']
+    )->name('sales.export.excel');
 
 
     Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases');
@@ -167,6 +174,10 @@ Route::middleware(['auth'])->group(function(){
     // Para ver el detalle en una vista blade
     Route::get('/transaccion/{id}/detalle', [HomeController::class, 'detalle'])
         ->name('transaccion.detalle');
+
+        Route::post('/transaccion/{id}/registrar-salida',
+            [HomeController::class, 'registrarSalida']
+        )->name('transaccion.registrarSalida');
 });
 
 // Route::group(['prefix' => 'admin'], function () {

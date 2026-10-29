@@ -329,17 +329,104 @@ class HomeController extends Controller
             'transaccion_id' => $transaccion->id]);
     }
 
+    public function registrarSalida(Request $request, $id)
+    {
+        try {
+
+            DB::transaction(function () use ($id) {
+
+                $transaction = Transaction::where('id', $id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if ($transaction->status != 0) {
+                    throw new \Exception(
+                        'Este alojamiento ya fue finalizado.'
+                    );
+                }
+
+                $comprobante = \App\Models\Movement::where(
+                    'transaction_id',
+                    $transaction->id
+                )
+                ->where('type', 'hospedaje')
+                ->exists();
+
+                if (!$comprobante) {
+                    throw new \Exception(
+                        'Debe generar un comprobante antes de registrar la salida.'
+                    );
+                }
+
+                $room = Room::where('id', $transaction->room_id)
+                    ->lockForUpdate()
+                    ->firstOrFail();
+
+                if ($room->status !== 'OCUPADO') {
+                    throw new \Exception(
+                        'La habitación no se encuentra ocupada.'
+                    );
+                }
+
+                $transaction->status = 1;
+                $transaction->save();
+
+                $room->status = 'LIMPIEZA';
+                $room->save();
+            });
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Salida registrada correctamente. La habitación pasó a LIMPIEZA.'
+            ]);
+
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'msg' => $th->getMessage()
+            ], 422);
+        }
+    }
+
     public function detalle($id)
     {
-        // $transaction = Transaction::findOrFail($id);
         $transaction = Transaction::with([
             'contact',
             'room.type'
         ])->findOrFail($id);
-        
-        $caja_abierta = BoxeOpening::where('status','abierta')->first();
+
+        $caja_abierta = BoxeOpening::where('status', 'abierta')->first();
+
         $pay_methods = PayMethod::all();
 
-        return view('rooms.detalle', compact('transaction','caja_abierta','pay_methods'));
+        $comprobante = \App\Models\Movement::where(
+            'transaction_id',
+            $transaction->id
+        )
+        ->where('type', 'hospedaje')
+        ->latest('id')
+        ->first();
+
+        return view('rooms.detalle', compact(
+            'transaction',
+            'caja_abierta',
+            'pay_methods',
+            'comprobante'
+        ));
     }
+
+    // public function detalle($id)
+    // {
+    //     // $transaction = Transaction::findOrFail($id);
+    //     $transaction = Transaction::with([
+    //         'contact',
+    //         'room.type'
+    //     ])->findOrFail($id);
+        
+    //     $caja_abierta = BoxeOpening::where('status','abierta')->first();
+    //     $pay_methods = PayMethod::all();
+
+    //     return view('rooms.detalle', compact('transaction','caja_abierta','pay_methods'));
+    // }
 }

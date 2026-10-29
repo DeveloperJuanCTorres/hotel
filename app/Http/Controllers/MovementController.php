@@ -263,12 +263,12 @@ class MovementController extends Controller
         $movimiento->save();
 
         // Actualizar transacción
-        Transaction::where('id', $request->transaction_id)
-            ->update(['status' => 1]);
+        // Transaction::where('id', $request->transaction_id)
+        //     ->update(['status' => 1]);
 
         // Cambiar estado de habitación
-        Room::where('numero', $request->habitacion)
-            ->update(['status' => 'LIMPIEZA']);
+        // Room::where('numero', $request->habitacion)
+        //     ->update(['status' => 'LIMPIEZA']);
 
         // Generar PDF del ticket
         $pdf = Pdf::loadView('rooms.partials.pdf_ticket', [
@@ -289,6 +289,9 @@ class MovementController extends Controller
 
         $ruta = "tickets/ticket_{$serie}_{$numero}.pdf";
         $pdf->save($dir . "/ticket_{$serie}_{$numero}.pdf");
+
+        $movimiento->pdf_sunat = asset($ruta);
+        $movimiento->save();
 
         return response()->json([
             'status' => true,
@@ -421,11 +424,11 @@ class MovementController extends Controller
         $movimiento->pdf_sunat = $resp->enlace_del_pdf ?? null;
         $movimiento->save();
 
-        Transaction::where('id', $request->transaction_id)
-            ->update(['status' => 1]);
+        // Transaction::where('id', $request->transaction_id)
+        //     ->update(['status' => 1]);
 
-        Room::where('numero', $request->habitacion)
-            ->update(['status' => 'LIMPIEZA']);
+        // Room::where('numero', $request->habitacion)
+        //     ->update(['status' => 'LIMPIEZA']);
 
         return response()->json([
             'status' => true,

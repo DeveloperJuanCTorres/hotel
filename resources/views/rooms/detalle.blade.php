@@ -161,7 +161,65 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-center align-items-center px-4 py-4">
+                        <div class="d-flex justify-content-center flex-wrap gap-2 px-4 py-4">
+
+                            @if(!$comprobante && $transaction->status == 0)
+
+                                <button class="btn btn-info btn-print"
+                                        data-type="ticket">
+                                    <i class="fa fa-print me-2"></i>
+                                    Generar Ticket
+                                </button>
+
+                                <button class="btn btn-primary btn-print"
+                                        data-type="boleta">
+                                    <i class="fa fa-file me-2"></i>
+                                    Generar Boleta
+                                </button>
+
+                                <button class="btn btn-success btn-print"
+                                        data-type="factura">
+                                    <i class="fa fa-file-invoice me-2"></i>
+                                    Generar Factura
+                                </button>
+
+                            @elseif($comprobante)
+
+                                <a href="{{ $comprobante->pdf_sunat }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="btn btn-primary"
+                                @if(!$comprobante->pdf_sunat) style="display:none" @endif>
+                                    <i class="fa fa-print me-2"></i>
+                                    Reimprimir comprobante
+                                </a>
+
+                                <span class="badge bg-success align-self-center">
+                                    {{ $comprobante->referencia }}
+                                </span>
+
+                            @endif
+
+                            @if($transaction->status == 0)
+
+                                <button type="button"
+                                        class="btn btn-danger"
+                                        id="btnRegistrarSalida"
+                                        @if(!$comprobante) disabled @endif>
+                                    <i class="fa fa-sign-out-alt me-2"></i>
+                                    Registrar salida
+                                </button>
+
+                            @else
+
+                                <span class="badge bg-secondary align-self-center">
+                                    Alojamiento finalizado
+                                </span>
+
+                            @endif
+
+                        </div>
+                        <!-- <div class="d-flex justify-content-center align-items-center px-4 py-4">
                             <button class="btn btn-info mx-2 btn-print" data-type="ticket">
                                 <i class="fa fa-print px-2"></i>Imprimir Ticket
                             </button>
@@ -171,7 +229,7 @@
                             <button class="btn btn-success mx-2 btn-print" data-type="factura">
                                 <i class="fa fa-print px-2"></i>Imprimir Factura
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -387,10 +445,14 @@
                         });
 
                         
-                        setTimeout(function(){                            
-                            window.open(response.ruta_pdf, "_blank");
-                            window.location.href = "/rooms"; 
-                        }, 2000);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Comprobante generado',
+                            text: 'El comprobante fue registrado correctamente. La habitación continúa ocupada.',
+                            confirmButtonText: 'Continuar'
+                        }).then(() => {
+                            window.location.reload();
+                        });
 
                         // $('#iframePdf').attr('src', response.ruta_pdf);
                         // $('#modalPdf').modal('show');
@@ -405,6 +467,71 @@
                 }
             });
         });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#btnRegistrarSalida').on('click', function () {
+
+            Swal.fire({
+                title: '¿Registrar salida del huésped?',
+                text: 'El alojamiento se finalizará y la habitación pasará a LIMPIEZA.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Sí, registrar salida',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+
+                if (!result.isConfirmed) return;
+
+                const boton = $('#btnRegistrarSalida');
+                boton.prop('disabled', true);
+
+                $.ajax({
+                    url: "{{ route('transaccion.registrarSalida', $transaction->id) }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function (response) {
+
+                        if (response.status) {
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Salida registrada',
+                                text: response.msg,
+                                confirmButtonText: 'Aceptar'
+                            }).then(() => {
+                                window.location.href = "/rooms";
+                            });
+
+                        } else {
+                            boton.prop('disabled', false);
+                            Swal.fire('Atención', response.msg, 'warning');
+                        }
+                    },
+                    error: function (xhr) {
+
+                        boton.prop('disabled', false);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo registrar la salida',
+                            text: xhr.responseJSON?.msg ||
+                                'Ocurrió un error inesperado.'
+                        });
+                    }
+                });
+
+            });
+
+        });
+
     });
 </script>
 

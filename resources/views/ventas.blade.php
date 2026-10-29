@@ -68,10 +68,23 @@
 
                         </div>
 
-                        <div class="mt-3 text-end">
+                        <div class="mt-3 d-flex justify-content-end flex-wrap gap-2">
+
                             <button id="btnBuscar" class="btn btn-primary">
-                                <i class="fa fa-search"></i> Buscar
+                                <i class="fa fa-search me-1"></i>
+                                Buscar
                             </button>
+
+                            <button id="btnExportPdf" class="btn btn-danger">
+                                <i class="fa fa-file-pdf me-1"></i>
+                                Exportar PDF
+                            </button>
+
+                            <button id="btnExportExcel" class="btn btn-success">
+                                <i class="fa fa-file-excel me-1"></i>
+                                Exportar Excel
+                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -177,6 +190,7 @@
         });
 
         function loadSales() {
+
             $.ajax({
                 url: "{{ route('sales.search') }}",
                 type: "GET",
@@ -186,35 +200,57 @@
                     contact_id: $('#contact_id').val(),
                     payment_status: $('#payment_status').val()
                 },
+
                 success: function (response) {
+
                     let tbody = '';
 
                     if (response.length === 0) {
-                        tbody = `<tr>
-                            <td colspan="7" class="text-center">No hay resultados</td>
-                        </tr>`;
+
+                        tbody = `
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No hay resultados
+                                </td>
+                            </tr>
+                        `;
+
                     } else {
+
                         $.each(response, function (i, sale) {
 
-                            let badge = sale.payment_status === 'paid'
-                                ? `<span class="badge bg-success">Pagado</span>`
-                                : `<span class="badge bg-warning">Debido</span>`;
+                            let badge = sale.status === 'pagado'
+                                ? '<span class="badge bg-success">Pagado</span>'
+                                : '<span class="badge bg-warning">Debido</span>';
 
                             tbody += `
                                 <tr>
-                                    <td>${sale.transaction_date}</td>
-                                    <td>${sale.invoice_no}</td>
-                                    <td>${sale.contact.name}</td>
-                                    <td class="text-end">${sale.final_total}</td>
-                                    <td class="text-end">${sale.total_paid}</td>
-                                    <td class="text-end">${sale.final_total - sale.total_paid}</td>
+                                    <td>${sale.fecha}</td>
+                                    <td>${$('<div>').text(sale.cliente).html()}</td>
+                                    <td class="text-end">
+                                        S/ ${Number(sale.total).toFixed(2)}
+                                    </td>
                                     <td class="text-center">${badge}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-info btn-view"
+                                                data-id="${sale.id}">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </button>
+                                    </td>
                                 </tr>
                             `;
                         });
                     }
 
-                    $('#sales_table tbody').html(tbody);
+                    $('#sales_tbody').html(tbody);
+                },
+
+                error: function (xhr) {
+                    Swal.fire(
+                        'Error',
+                        xhr.responseJSON?.message || 'No se pudieron cargar las ventas.',
+                        'error'
+                    );
                 }
             });
         }
@@ -254,6 +290,31 @@
         });
     });
 
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        function obtenerFiltros() {
+            return $.param({
+                from_date: $('#from_date').val(),
+                to_date: $('#to_date').val(),
+                contact_id: $('#contact_id').val(),
+                payment_status: $('#payment_status').val()
+            });
+        }
+
+        $('#btnExportPdf').on('click', function () {
+            let url = "{{ route('sales.export.pdf') }}";
+            window.open(url + '?' + obtenerFiltros(), '_blank');
+        });
+
+        $('#btnExportExcel').on('click', function () {
+            let url = "{{ route('sales.export.excel') }}";
+            window.location.href = url + '?' + obtenerFiltros();
+        });
+
+    });
 </script>
 
 @endsection

@@ -11,6 +11,10 @@ use App\Models\Sale;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\SalesExport;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class SalesController extends Controller
 {
@@ -138,25 +142,119 @@ class SalesController extends Controller
 
     public function search(Request $request)
     {
-        $query = Sale::with('contact');
+        $sales = $this->ventasFiltradas($request)->get();
 
-        if ($request->from_date && $request->to_date) {
-            $query->whereBetween('transaction_date', [
-                $request->from_date,
-                $request->to_date
-            ]);
+        return response()->json(
+            $sales->map(function ($sale) {
+                return [
+                    'id' => $sale->id,
+                    'fecha' => $sale->created_at->format('d/m/Y H:i'),
+                    'cliente' => $sale->contact->name ?? '-',
+                    'total' => (float) $sale->total,
+                    'status' => $sale->status,
+                    'cantidad_productos' => $sale->details->sum('cantidad'),
+                ];
+            })
+        );
+    }
+
+    // public function search(Request $request)
+    // {
+    //     $query = Sale::with('contact');
+
+    //     if ($request->from_date && $request->to_date) {
+    //         $query->whereBetween('transaction_date', [
+    //             $request->from_date,
+    //             $request->to_date
+    //         ]);
+    //     }
+
+    //     if ($request->contact_id) {
+    //         $query->where('contact_id', $request->contact_id);
+    //     }
+
+    //     if ($request->payment_status) {
+    //         $query->where('payment_status', $request->payment_status);
+    //     }
+
+    //     return response()->json(
+    //         $query->orderBy('transaction_date', 'desc')->get()
+    //     );
+    // }
+
+    private function ventasFiltradas(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date|after_or_equal:from_date',
+            'contact_id' => 'nullable|integer|exists:contacts,id',
+            'payment_status' => 'nullable|in:paid,due',
+        ]);
+
+        $query = Sale::with([
+            'contact',
+            'details.product',
+            'payMethod'
+        ]);
+
+        if ($request->filled('from_date')) {
+            $query->where(
+                'created_at',
+                '>=',
+                Carbon::parse($request->from_date)->startOfDay()
+            );
         }
 
-        if ($request->contact_id) {
+        if ($request->filled('to_date')) {
+            $query->where(
+                'created_at',
+                '<=',
+                Carbon::parse($request->to_date)->endOfDay()
+            );
+        }
+
+        if ($request->filled('contact_id')) {
             $query->where('contact_id', $request->contact_id);
         }
 
-        if ($request->payment_status) {
-            $query->where('payment_status', $request->payment_status);
+        if ($request->filled('payment_status')) {
+            $estado = $request->payment_status === 'paid'
+                ? 'pagado'
+                : 'debido';
+
+            $query->where('status', $estado);
         }
 
-        return response()->json(
-            $query->orderBy('transaction_date', 'desc')->get()
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $sales = $this->ventasFiltradas($request)->get();
+
+        $totalGeneral = $sales->sum('total');
+
+        $pdf = Pdf::loadView('reports.sales_pdf', [
+            'sales' => $sales,
+            'totalGeneral' => $totalGeneral,
+            'desde' => $request->from_date,
+            'hasta' => $request->to_date,
+        ]);
+
+        $pdf->setPaper('a4', 'landscape');
+
+        return $pdf->download(
+            'reporte_ventas_' . now()->format('Ymd_His') . '.pdf'
+        );
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $sales = $this->ventasFiltradas($request)->get();
+
+        return Excel::download(
+            new SalesExport($sales),
+            'reporte_ventas_' . now()->format('Ymd_His') . '.xlsx'
         );
     }
 }
