@@ -183,22 +183,7 @@
                                     Generar Factura
                                 </button>
 
-                            <!-- elseif(comprobante)
-
-                                <a href="{{ $comprobante->pdf_sunat }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="btn btn-primary"
-                                @if(!comprobante->pdf_sunat) style="display:none" endif>
-                                    <i class="fa fa-print me-2"></i>
-                                    Reimprimir comprobante
-                                </a>
-
-                                <span class="badge bg-success align-self-center">
-                                    {{ $comprobante->referencia }}
-                                </span>
-
-                            endif -->
+                            
 
                             @elseif($comprobante)
 
