@@ -169,12 +169,9 @@
     <!-- EMPRESA -->
 
     <div class="subtitulo">
-        <span style="font-size: 9px; font-weight: normal;">
-            DIRECCIÓN
-        </span>
 
         <div style="font-size: 11px; font-weight: bold; margin-top: 3px;">
-            PARDO MIGUEL N° 910
+            PARDO MIGUEL N° 910 - JAÉN
         </div>
     </div>
 
