@@ -33,8 +33,8 @@
         }
 
         .logo img {
-            max-width: 115px;
-            max-height: 65px;
+            max-width: 135px;
+            max-height: 85px;
             width: auto;
             height: auto;
         }
@@ -159,13 +159,10 @@
 
     <!-- LOGO -->
     <div class="logo">
-        <img src="{{ asset('assets/img/camelot.png') }}" alt="Camelot">
+        <img src="{{ public_path('assets/img/camelot.png') }}" alt="Camelot">
     </div>
 
     <!-- EMPRESA -->
-    <div class="empresa">
-        {{ config('app.name') }}
-    </div>
 
     <div class="subtitulo">
         SERVICIO DE HOSPEDAJE
