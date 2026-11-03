@@ -183,16 +183,49 @@
                                     Generar Factura
                                 </button>
 
-                            @elseif($comprobante)
+                            <!-- elseif(comprobante)
 
                                 <a href="{{ $comprobante->pdf_sunat }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="btn btn-primary"
-                                @if(!$comprobante->pdf_sunat) style="display:none" @endif>
+                                @if(!comprobante->pdf_sunat) style="display:none" endif>
                                     <i class="fa fa-print me-2"></i>
                                     Reimprimir comprobante
                                 </a>
+
+                                <span class="badge bg-success align-self-center">
+                                    {{ $comprobante->referencia }}
+                                </span>
+
+                            endif -->
+
+                            @elseif($comprobante)
+
+                                @if($comprobante->observacion_sunat === 'Ticket interno')
+
+                                    <a href="{{ route('comprobantes.reimprimirTicket', $comprobante->id) }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="btn btn-info">
+
+                                        <i class="fa fa-print me-2"></i>
+                                        Reimprimir Ticket
+                                    </a>
+
+                                @else
+
+                                    <a href="{{ $comprobante->pdf_sunat }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="btn btn-primary"
+                                    @if(!$comprobante->pdf_sunat) style="display:none" @endif>
+
+                                        <i class="fa fa-print me-2"></i>
+                                        Reimprimir comprobante
+                                    </a>
+
+                                @endif
 
                                 <span class="badge bg-success align-self-center">
                                     {{ $comprobante->referencia }}

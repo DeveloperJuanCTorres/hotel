@@ -436,4 +436,41 @@ class MovementController extends Controller
             'ruta_pdf' => $resp->enlace_del_pdf
         ]);
     }
+
+    public function reimprimirTicket($id)
+    {
+        $movimiento = Movement::findOrFail($id);
+
+        // Verificar que sea un ticket interno
+        if ($movimiento->observacion_sunat !== 'Ticket interno') {
+            abort(403, 'Este documento no es un ticket interno.');
+        }
+
+        // Recuperar la transacción original
+        $transaction = Transaction::with(['contact', 'room'])
+            ->findOrFail($movimiento->transaction_id);
+
+        // Recuperar serie y número original
+        $referencia = $movimiento->referencia;
+
+        $partes = explode('-', $referencia, 2);
+
+        $serie = $partes[0];
+        $numero = $partes[1] ?? '0';
+
+        // Generar el PDF con el diseño actualizado
+        $pdf = Pdf::loadView('rooms.partials.pdf_ticket', [
+            'serie'      => $serie,
+            'numero'     => $numero,
+            'cliente'    => $transaction->contact->name,
+            'habitacion' => $transaction->room->numero,
+            'total'      => $movimiento->total,
+            'dias'       => $transaction->cant_noches,
+            'fecha'      => $movimiento->created_at
+                ? $movimiento->created_at->format('d/m/Y H:i')
+                : '',
+        ])->setPaper([0, 0, 226.77, 600]);
+
+        return $pdf->stream('ticket_' . $referencia . '.pdf');
+    }
 }

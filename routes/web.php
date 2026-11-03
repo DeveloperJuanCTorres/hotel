@@ -165,6 +165,11 @@ Route::middleware(['auth'])->group(function(){
 
 
     Route::post('/comprobantes/generar', [MovementController::class, 'generar']);
+
+    Route::get(
+        '/comprobantes/{id}/reimprimir-ticket',
+        [MovementController::class, 'reimprimirTicket']
+    )->name('comprobantes.reimprimirTicket');
     
 
     // Para buscar la transacción activa de la habitación
