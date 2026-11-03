@@ -48,9 +48,13 @@
 
         .subtitulo {
             text-align: center;
-            font-size: 9px;
-            letter-spacing: 0.4px;
-            margin-top: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            padding: 0 5px;
+            letter-spacing: 0;
         }
 
         .separador {
@@ -165,7 +169,13 @@
     <!-- EMPRESA -->
 
     <div class="subtitulo">
-        SERVICIO DE HOSPEDAJE
+        <span style="font-size: 9px; font-weight: normal;">
+            DIRECCIÓN
+        </span>
+
+        <div style="font-size: 11px; font-weight: bold; margin-top: 3px;">
+            PARDO MIGUEL N° 910
+        </div>
     </div>
 
     <div class="separador-doble"></div>
