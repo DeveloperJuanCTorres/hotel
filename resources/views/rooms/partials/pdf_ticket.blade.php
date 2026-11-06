@@ -6,7 +6,9 @@
     <title>Ticket de Consumo</title>
 
     <style>
+        
         @page {
+            size: 80mm auto;
             margin: 3mm 4mm;
         }
 
@@ -14,13 +16,18 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: DejaVu Sans, Arial, sans-serif;
-            font-size: 10px;
-            color: #000;
+        html, body {
+            width: 72mm;
+            max-width: 72mm;
             margin: 0;
             padding: 0;
-            line-height: 1.4;
+        }
+
+        body {
+            font-family: DejaVu Sans, Arial, sans-serif;
+            font-size: 9px;
+            color: #000;
+            line-height: 1.35;
         }
 
         .center { text-align: center; }
@@ -33,14 +40,14 @@
         }
 
         .logo img {
-            max-width: 135px;
-            max-height: 85px;
+            max-width: 125px;
+            max-height: 75px;
             width: auto;
             height: auto;
         }
 
         .empresa {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             text-align: center;
             text-transform: uppercase;
@@ -48,13 +55,11 @@
 
         .subtitulo {
             text-align: center;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
-            line-height: 1.5;
-            margin-top: 8px;
-            margin-bottom: 8px;
-            padding: 0 5px;
-            letter-spacing: 0;
+            line-height: 1.4;
+            margin: 8px 0;
+            padding: 0 3px;
         }
 
         .separador {
@@ -90,16 +95,20 @@
             padding: 3px 0;
             vertical-align: top;
             overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .datos td:first-child {
-            width: 35%;
+            width: 30%;
             font-weight: bold;
+            padding-right: 4px;
         }
 
         .datos td:last-child {
-            width: 65%;
+            width: 70%;
             text-align: right;
+            overflow-wrap: anywhere;
+            word-wrap: break-word;
         }
 
         .detalle th {
@@ -116,6 +125,7 @@
         .descripcion-secundaria {
             font-size: 9px;
             font-weight: normal;
+            margin-top: 3px;
         }
 
         .total-box {
@@ -130,6 +140,15 @@
             font-weight: bold;
         }
 
+        .total-box table td:first-child {
+            width: 40%;
+        }
+
+        .total-box table td:last-child {
+            width: 60%;
+            text-align: right;
+        }
+
         .pago {
             font-size: 10px;
             text-align: center;
@@ -142,6 +161,7 @@
             text-align: center;
             line-height: 1.5;
             margin-top: 10px;
+            overflow-wrap: break-word;
         }
 
         .agradecimiento {
@@ -156,6 +176,7 @@
             font-size: 8px;
             margin-top: 8px;
         }
+
     </style>
 </head>
 
@@ -220,15 +241,15 @@
     <table class="detalle">
         <thead>
             <tr>
-                <th style="width: 15%; text-align:left;">
+                <th style="width: 13%; text-align:left;">
                     CANT.
                 </th>
 
-                <th style="width: 53%; text-align:left;">
+                <th style="width: 52%; text-align:left;">
                     DESCRIPCIÓN
                 </th>
 
-                <th style="width: 32%; text-align:right;">
+                <th style="width: 35%; text-align:right;">
                     IMPORTE
                 </th>
             </tr>
